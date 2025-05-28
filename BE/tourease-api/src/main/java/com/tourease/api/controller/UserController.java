@@ -1,5 +1,8 @@
 package com.tourease.api.controller;
 
-public class UserController {
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+public class UserController {
+	
 }
