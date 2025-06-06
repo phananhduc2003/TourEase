@@ -1,7 +1,7 @@
 import { Fragment } from "react"; //component dùng để chứa.
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { defaultRoutes } from "./routes";
-import DefaultLayout from "./layouts//DefaultLayout";
+import DefaultLayout from "./layouts/DefaultLayout";
 
 function App() {
   return (
