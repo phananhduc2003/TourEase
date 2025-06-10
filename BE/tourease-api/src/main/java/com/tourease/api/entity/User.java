@@ -2,6 +2,7 @@ package com.tourease.api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,32 +18,40 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userID;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "ip_address")
     private String ipAddress;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "is_active")
     private ActiveStatus isActive;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private UserStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
+    @Column(name = "create_date")
     private LocalDateTime createDate;
 
+    @Column(name = "update_date")
     private LocalDateTime updateDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -57,11 +66,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<History> histories;
 
-    public void register() {
-        this.createDate = LocalDateTime.now();
-        this.isActive = ActiveStatus.Y;
-    }
-
     public enum ActiveStatus {
         N, Y
     }
@@ -72,19 +76,5 @@ public class User {
 
     public enum Role {
         USER, ADMIN
-    }
-
-    public boolean validateLogin(String username, String password) {
-        return this.userName.equals(username) && this.password.equals(password);
-    }
-
-    public void updateUserDetails(String email, String phoneNumber, String address) {
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-    }
-
-    public String getUserRole() {
-        return role.name();
     }
 }
