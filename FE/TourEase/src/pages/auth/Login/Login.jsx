@@ -15,6 +15,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import bg from "../../../assets/images/signin.svg";
 
 import { useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const boxStyle = {
   position: "absolute",
@@ -27,18 +29,42 @@ const boxStyle = {
   boxShadow: 24,
 };
 
+const vertical = "top";
+const horizontal = "right";
+
 function Login() {
+  const authContext = useAuth();
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const vertical = "top";
-  const horizontal = "right";
-
-  const handleUsername = () => {
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
     setOpen(false); // Đóng Snackbar khi người dùng nhập lại
   };
 
-  const handlePassword = () => {
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
     setOpen(false); // Đóng Snackbar khi người dùng nhập lại
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setOpen(false);
+
+    const role = await authContext.handleLogin(username, password);
+
+    if (role !== null) {
+      if (role === 1) {
+        navigate(`/homeadmin`);
+      } else {
+        navigate(`/`);
+      }
+    } else {
+      setOpen(true);
+    }
   };
 
   const handleClose = (event, reason) => {
@@ -62,7 +88,8 @@ function Login() {
         anchorOrigin={{ vertical, horizontal }}
       >
         <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          Failed! Enter correct username and password.
+          {authContext.errorMessage ||
+            "Failed! Enter correct username and password."}
         </Alert>
       </Snackbar>
       <Box sx={boxStyle}>
@@ -116,7 +143,7 @@ function Login() {
                 </Box>
                 <Box
                   component="form"
-                  //   onSubmit={handleSubmit}
+                  onSubmit={handleSubmit}
                   method="POST"
                   noValidate
                   sx={{ mt: 2 }}
@@ -127,10 +154,11 @@ function Login() {
                         onChange={handleUsername}
                         required
                         fullWidth
-                        id="Username"
+                        autoComplete="off"
+                        type="text"
+                        id="username"
                         label="Username"
-                        name="Username"
-                        autoComplete="Username"
+                        name="username"
                         InputProps={{
                           style: { color: "#ffffff" },
                         }}
@@ -160,11 +188,11 @@ function Login() {
                         onChange={handlePassword}
                         required
                         fullWidth
+                        autoComplete="off"
                         type="password"
-                        id="Password"
+                        id="password"
                         label="Password"
-                        name="Password"
-                        autoComplete="Password"
+                        name="password"
                         InputProps={{
                           style: { color: "#ffffff" },
                         }}
@@ -217,9 +245,9 @@ function Login() {
                           Not registered yet?{" "}
                           <span
                             style={{ color: "#beb4fb", cursor: "pointer" }}
-                            // onClick={() => {
-                            //   navigate("/register");
-                            // }}
+                            onClick={() => {
+                              navigate("/register");
+                            }}
                           >
                             Create an Account
                           </span>

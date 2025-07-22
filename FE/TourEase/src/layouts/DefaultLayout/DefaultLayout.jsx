@@ -6,6 +6,7 @@ function DefaultLayout({ children }) {
   return (
     <>
       <Typography variant="subtitle">DefaultLayout</Typography>
+
       <Box>{children}</Box>
     </>
   );
