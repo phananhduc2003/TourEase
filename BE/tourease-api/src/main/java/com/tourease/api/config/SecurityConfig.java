@@ -1,6 +1,8 @@
 package com.tourease.api.config;
 
 import com.tourease.api.jwt.JwtAuthenticationFilter;
+import com.tourease.api.service.CustomOAuth2SuccessHandler;
+import com.tourease.api.service.CustomOAuth2UserService;
 import com.tourease.api.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +27,17 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+    		CustomUserDetailsService userDetailsService,
+    		CustomOAuth2UserService customOAuth2UserService,
+            CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
 
     @Bean
@@ -43,7 +52,13 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2 -> oauth2
+                	    .userInfoEndpoint(userInfo -> userInfo
+                	        .userService(customOAuth2UserService)
+                	    )
+                	    .successHandler(customOAuth2SuccessHandler))
                 .build();
+        		
     }
 
     @Bean

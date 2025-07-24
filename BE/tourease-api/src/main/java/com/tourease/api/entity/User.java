@@ -37,6 +37,12 @@ public class User {
 
     @Column(name = "ip_address")
     private String ipAddress;
+    
+    @Column(name = "provider")
+    private String provider; // GOOGLE, FACEBOOK, LOCAL
+
+    @Column(name = "provider_id")
+    private String providerId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "is_active")
