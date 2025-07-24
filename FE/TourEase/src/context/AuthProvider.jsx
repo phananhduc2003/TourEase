@@ -11,6 +11,18 @@ function AuthProvider({ children }) {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
+    // 1. Check token in URL params first
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get("token");
+
+    if (tokenFromUrl) {
+      sessionStorage.setItem("token", tokenFromUrl);
+
+      // Optionally clean URL
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+
     const token = sessionStorage.getItem("token");
     if (token) {
       try {
@@ -80,6 +92,10 @@ function AuthProvider({ children }) {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  };
+
   const Logout = () => {
     setAuthenticated(false);
     setUserRole(null);
@@ -97,6 +113,7 @@ function AuthProvider({ children }) {
         idUser,
         loading,
         errorMessage,
+        handleGoogleLogin,
       }}
     >
       {children}
