@@ -11,6 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 
 import logo from "../../../assets/images/logoweb.png";
+import DarkMode from "../../../theme/DarkMode";
 
 function Header() {
   const wrapper = {
@@ -63,7 +64,12 @@ function Header() {
               component="img"
               src={logo}
               alt="Logo"
-              sx={{ height: "75px", width: "auto", cursor: "pointer" }}
+              sx={{
+                height: "75px",
+                width: "auto",
+                cursor: "pointer",
+                color: "Background.default",
+              }}
             ></Box>
           </Box>
           {/* reponsive menu */}
@@ -222,7 +228,9 @@ function Header() {
                 />
               </Grid>
 
-              <Grid item>{/* <DarkMode /> */}</Grid>
+              <Grid item sx={{ mr: 1 }}>
+                <DarkMode />
+              </Grid>
 
               <Grid item>
                 {!isAuthenticated ? (
@@ -281,8 +289,9 @@ function Header() {
                           top: -7,
                           width: 30,
                           height: 30,
-                          color: "text.primary",
+
                           cursor: "pointer",
+                          color: "primary.main",
                         }}
                       />
                     </Grid>

@@ -37,9 +37,9 @@ const theme = extendTheme({
       mode: "dark",
       palette: {
         primary: {
-          light: "#444444 ",
-          main: "#B0B0B0 ",
-          dark: "#B0B0B0",
+          light: "#050A44   ",
+          main: " #0A21c0 ",
+          dark: "#B39CD0 ",
           contrastText: "#ffffff",
         },
         text: {
@@ -51,9 +51,9 @@ const theme = extendTheme({
           paper: "#373A40", // Nền giấy tối
         },
         secondary: {
-          light: "#A8DADC   ",
-          main: "#FFC1CC  ",
-          dark: "#B39CD0 ",
+          light: "#444444 ",
+          main: "#B0B0B0 ",
+          dark: "#B0B0B0",
           contrastText: "#ffffff",
         },
       },
