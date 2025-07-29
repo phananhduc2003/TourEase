@@ -11,9 +11,9 @@ const theme = extendTheme({
       palette: {
         mode: "light",
         primary: {
-          light: "#64b5f6", // Màu xanh nước biển sáng
-          main: "#2196f3", // Màu chính xanh nước biển
-          dark: "#1976d2", // Màu xanh nước biển đậm
+          light: "#ffcc80", // Cam sáng
+          main: "#ef6c00", // Cam chính
+          dark: "#ffa726", // Cam đậm
           contrastText: "#ffffff", // Chữ trắng trên nút xanh
         },
         text: {
@@ -26,9 +26,9 @@ const theme = extendTheme({
           paper: "#e0e0e0",
         },
         secondary: {
-          light: "#ffcc80", // Cam sáng
-          main: "#ffa726", // Cam chính
-          dark: "#ef6c00", // Cam đậm
+          light: "#3674B5", // Màu xanh nước biển sáng
+          main: "#578FCA", // Màu chính xanh nước biển
+          dark: "#1976d2", // Màu xanh nước biển đậm
           contrastText: "#ffffff", // Chữ trắng
         },
       },
@@ -37,23 +37,23 @@ const theme = extendTheme({
       mode: "dark",
       palette: {
         primary: {
-          light: "#42a5f5",
-          main: "#1e88e5",
-          dark: "#1565c0",
+          light: "#444444 ",
+          main: "#B0B0B0 ",
+          dark: "#B0B0B0",
           contrastText: "#ffffff",
         },
         text: {
-          primary: "#ffffff",
+          primary: "#E4E4E4",
           secondary: "#B6BEC9",
         },
         background: {
-          default: "#121212", // Nền tối
+          default: "#2C2C2C ", // Nền tối
           paper: "#373A40", // Nền giấy tối
         },
         secondary: {
-          light: "#ffcc80",
-          main: "#ffa726",
-          dark: "#ef6c00",
+          light: "#A8DADC   ",
+          main: "#FFC1CC  ",
+          dark: "#B39CD0 ",
           contrastText: "#ffffff",
         },
       },
