@@ -106,20 +106,26 @@ function HomePage() {
     <>
       <Box sx={wrapper}>
         {/* hero image */}
-        <Box sx={{ m: 3, borderRadius: 1, overflow: "hidden", boxShadow: 3 }}>
+        <Box
+          sx={{
+            m: 3,
+            borderRadius: 1,
+            boxShadow: 3,
+          }}
+        >
           <Swiper
             modules={[Pagination, Autoplay]}
             pagination={{ clickable: true }}
             autoplay={{ delay: 3000 }}
             loop={true}
-            style={{ width: "100%", height: "100vh" }}
+            style={{ width: "100%", height: "100vh", overflow: "hidden" }}
           >
             {heroImages.map((image, index) => (
               <SwiperSlide key={index}>
                 <Box
                   style={{
                     height: "100vh",
-                    width: "100vw",
+                    width: "100%",
                     backgroundImage: `url(${image})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
@@ -542,7 +548,7 @@ function HomePage() {
           sx={{
             mt: 6,
             minHeight: "100vh",
-            width: "100vw",
+            width: "100%",
             backgroundColor: "background.second",
             display: "flex",
             alignItems: "center",
@@ -762,7 +768,16 @@ function HomePage() {
             </Box>{" "}
             trải nghiệm phổ biến nhất
           </Typography>
-          <Box sx={{ width: "100%", padding: 2, mt: 3 }}>
+
+          <Box
+            sx={{
+              width: "100%",
+              padding: 2,
+              mt: 3,
+              mx: "auto",
+              maxWidth: "1200px",
+            }}
+          >
             <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
               {itemtest.map((item, index) => (
                 <Card key={item.id} sx={{ borderRadius: 2 }}>
@@ -798,7 +813,7 @@ function HomePage() {
             sx={{
               mt: 6,
               minHeight: "70vh",
-              width: "100vw",
+              width: "100%",
               backgroundColor: "background.default",
               display: "flex",
               justifyContent: "center",
@@ -981,7 +996,7 @@ function HomePage() {
           </Box>
         </MotionBox>
 
-        <Box sx={{ mt: 1 }}>
+        <Box sx={{ mt: 1, mb: 5 }}>
           <Grid container spacing={2} sx={{ px: 3 }}>
             <Grid
               item
