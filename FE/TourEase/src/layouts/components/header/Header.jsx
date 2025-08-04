@@ -1,48 +1,70 @@
-import { Link } from "react-router-dom";
 import { Box, Grid, Typography } from "@mui/material";
+import React from "react";
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
-
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-
 import Divider from "@mui/material/Divider";
+
+import { useNavigate } from "react-router-dom";
 
 import logo from "../../../assets/images/logoweb.png";
 import DarkMode from "../../../theme/DarkMode";
+import { useAuth } from "../../../context/AuthContext";
+
+const wrapper = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  position: "fixed",
+  top: 0,
+  left: 0,
+  right: 0,
+  width: "100%",
+  height: "70px",
+  backgroundColor: "background.default",
+  boxShadow: 4,
+  zIndex: 1200,
+};
 
 function Header() {
-  const wrapper = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    width: "100%",
-    height: "70px",
-    backgroundColor: "background.default",
-    boxShadow: 4,
-    zIndex: 1200,
-  };
+  const menuItems = [
+    { name: "Trang Chủ", path: "/" },
+    { name: "Giới Thiệu", path: "/introduction" },
+    { name: "Tour", path: "/tours" },
+    { name: "Điểm Đến", path: "/destinations" },
+    { name: "Liên Hệ", path: "/contact" },
+  ];
 
-  const menuItems = ["Trang Chủ", "Giới Thiệu", "Tour", "Điểm Đến", "Liên Hệ"];
+  const navigate = useNavigate();
 
-  const isAuthenticated = true; // Replace with actual authentication logic
+  const { isAuthenticated, Logout } = useAuth();
 
   const [activeIndex, setActiveIndex] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
 
   const [anchorEl, setAnchorEl] = useState(null);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleNavigationLogin = () => {
+    navigate("/login");
+  };
+
+  const handleNavigationRegister = () => {
+    navigate("/register");
+  };
+
+  const handleLogout = () => {
+    Logout();
   };
 
   return (
@@ -72,6 +94,7 @@ function Header() {
               }}
             ></Box>
           </Box>
+
           {/* reponsive menu */}
           <Box
             onClick={handleClick}
@@ -127,40 +150,23 @@ function Header() {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem
-              sx={{ width: 200, color: "text.primary" }}
-              onClick={handleClose}
-            >
-              Trang Chủ
-            </MenuItem>
-            <Divider />
-            <MenuItem
-              sx={{ width: 200, color: "text.primary" }}
-              onClick={handleClose}
-            >
-              Giới Thiệu
-            </MenuItem>
-            <Divider />
-            <MenuItem
-              sx={{ width: 200, color: "text.primary" }}
-              onClick={handleClose}
-            >
-              Tour
-            </MenuItem>
-            <Divider />
-            <MenuItem
-              sx={{ width: 200, color: "text.primary" }}
-              onClick={handleClose}
-            >
-              Điểm Đến
-            </MenuItem>
-            <Divider />
-            <MenuItem
-              sx={{ width: 200, color: "text.primary" }}
-              onClick={handleClose}
-            >
-              Liên Hệ
-            </MenuItem>
+            {menuItems
+              .map((item, index) => [
+                <MenuItem
+                  key={item.name}
+                  sx={{ width: 200, color: "text.primary" }}
+                  onClick={() => {
+                    handleClose();
+                    navigate(item.path);
+                  }}
+                >
+                  {item.name}
+                </MenuItem>,
+                index < menuItems.length - 1 && (
+                  <Divider key={`divider-${item.name}`} />
+                ),
+              ])
+              .flat()}
           </Menu>
         </Box>
 
@@ -183,7 +189,7 @@ function Header() {
           >
             {menuItems.map((item, idx) => (
               <Box
-                key={item}
+                key={item.name}
                 sx={{
                   height: "42px",
                   width: "100px",
@@ -205,9 +211,12 @@ function Header() {
                 }}
                 onMouseEnter={() => setHoverIndex(idx)}
                 onMouseLeave={() => setHoverIndex(null)}
-                onClick={() => setActiveIndex(idx)}
+                onClick={() => {
+                  setActiveIndex(idx);
+                  navigate(item.path);
+                }}
               >
-                {item}
+                {item.name}
               </Box>
             ))}
           </Box>
@@ -250,7 +259,7 @@ function Header() {
                             color: "text.secondary",
                           },
                         }}
-                        // onClick={() => handleNavigation("/login")}
+                        onClick={handleNavigationRegister}
                       >
                         Sign Up
                       </Typography>
@@ -268,7 +277,7 @@ function Header() {
                             color: "text.secondary",
                           },
                         }}
-                        // onClick={() => handleNavigation("/login")}
+                        onClick={handleNavigationLogin}
                       >
                         Sign In
                       </Typography>
@@ -314,7 +323,7 @@ function Header() {
                             color: "text.secondary",
                           },
                         }}
-                        // onClick={Logout}
+                        onClick={handleLogout}
                       >
                         Logout
                       </Typography>

@@ -161,7 +161,7 @@ function Login() {
                 backgroundSize: "cover",
                 height: { xs: "auto", sm: "70vh", lg: "70vh" },
                 minHeight: { xs: "100vh", sm: "500px", lg: "500px" },
-                backgroundColor: "#3b33d5",
+                backgroundColor: "primary.main",
                 px: { xs: 0, sm: 2, lg: 0 },
                 py: { xs: 2, sm: 4, lg: 0 },
                 display: "flex",
