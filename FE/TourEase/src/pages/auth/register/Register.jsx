@@ -157,7 +157,7 @@ function Register() {
                 backgroundSize: "cover",
                 height: "70vh",
                 minHeight: "500px",
-                backgroundColor: "#3b33d5",
+                backgroundColor: "primary.main",
               }}
             >
               <Container>

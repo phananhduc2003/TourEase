@@ -1,7 +1,9 @@
 const routes = {
   home: "/",
-  tourpage: "/tourpage",
-  pagetest: "/pagetest",
+  tourPage: "/tours",
+  introductionPage: "/introduction",
+  destinationPage: "/destinations",
+  contactPage: "/contact",
   login: "/login",
   register: "/register",
 
