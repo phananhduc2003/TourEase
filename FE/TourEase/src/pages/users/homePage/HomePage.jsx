@@ -15,7 +15,7 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
-import Masonry from "@mui/lab/Masonry";
+
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -35,6 +35,7 @@ import featuresBox from "../../../assets/images/imageHome/features-box.jpg";
 
 import CardInForHomePage from "../../../components/CardInForHomePage/CardInForHomePage";
 import TourCard from "../../../components/TourCard/TourCard";
+import CardPopularTour from "../../../components/CardPopularTour/CardPopularTour";
 
 const wrapper = {
   display: "flex",
@@ -46,7 +47,6 @@ const MotionBox = motion(Box);
 
 function HomePage() {
   const heroImages = [hero1, hero2, hero3, hero4, hero5, hero6];
-  const heights = [280, 350, 180, 420, 320, 250];
 
   const { ref, inView } = useInView({
     triggerOnce: false, // ✅ cho phép chạy lại animation nhiều lần
@@ -384,7 +384,8 @@ function HomePage() {
             trải nghiệm phổ biến nhất
           </Typography>
 
-          <Box
+          <CardPopularTour />
+          {/* <Box
             sx={{
               width: "100%",
               padding: 2,
@@ -414,8 +415,8 @@ function HomePage() {
                   </CardContent>
                 </Card>
               ))}
-            </Masonry>
-          </Box>
+            </Masonry> 
+          </Box>*/}
         </Box>
         {/* about website */}
         <MotionBox

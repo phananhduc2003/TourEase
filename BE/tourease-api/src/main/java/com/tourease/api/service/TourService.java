@@ -22,4 +22,11 @@ public class TourService {
 		Page<Tour> tourPage = tourRepository.findByAvailabilityTrueOrderByTourIDDesc(pageable);
 		return tourPage.getContent(); //getContent() sẽ trả về danh sách các phần tử trong trang hiện tại dưới dạng List<Tour>
 	}
+	
+	/**
+     * Lấy ra 6 tour được booking nhiều nhất và CONFIRMED nhiều nhất
+     */
+	public List<Tour> getPopularTours() {
+		return tourRepository.findPopularTours();
+	}
 }

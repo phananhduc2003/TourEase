@@ -35,4 +35,18 @@ public class TourController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	
+	@GetMapping("/popular")
+	public ResponseEntity<List<Tour>> getPopularTours() {
+		try {
+			List<Tour> tours = tourService.getPopularTours();
+			
+			if(tours.isEmpty()) {
+				return ResponseEntity.noContent().build();
+			}
+			return ResponseEntity.ok(tours);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }
