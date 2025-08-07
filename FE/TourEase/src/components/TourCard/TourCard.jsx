@@ -13,7 +13,7 @@ import { ApiLatestTour } from "../../api/user/ApiLatestTour";
 import { useEffect, useState } from "react";
 
 function TourCard() {
-  const [data, setData] = useState([]);
+  const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -79,7 +79,7 @@ function TourCard() {
   }
 
   // Empty state
-  if (!data || data.length === 0) {
+  if (!datas || datas.length === 0) {
     return (
       <Box sx={{ textAlign: "center", py: 4 }}>
         <Typography variant="h6" color="text.secondary">
@@ -95,7 +95,7 @@ function TourCard() {
   return (
     <Box>
       <Grid container spacing={2} sx={{ justifyContent: "center", px: 2 }}>
-        {data.map((tour, index) => (
+        {datas.map((tour, index) => (
           <Grid item xs={12} sm={6} md={3} key={tour.id || `tour-${index}`}>
             <Box
               sx={{
