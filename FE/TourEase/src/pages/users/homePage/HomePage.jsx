@@ -1,14 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Chip, Grid, Stack, Typography } from "@mui/material";
 import { useAuth } from "../../../context/AuthContext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
@@ -52,45 +42,6 @@ function HomePage() {
     triggerOnce: false, // ✅ cho phép chạy lại animation nhiều lần
     threshold: 0.1,
   });
-
-  const itemtest = [
-    {
-      id: 1,
-      title: "Tour 1",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhO3gLOhBSNm5F4V2uVty_ogsxgWfInGaelA&s",
-      days: "4 ngày 3 đêm",
-    },
-    {
-      id: 2,
-      title: "Tour 2",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhO3gLOhBSNm5F4V2uVty_ogsxgWfInGaelA&s",
-      days: "5 ngày 4 đêm",
-    },
-    {
-      id: 3,
-      title: "Tour 3",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhO3gLOhBSNm5F4V2uVty_ogsxgWfInGaelA&s",
-      days: "6 ngày 5 đêm",
-    },
-    {
-      id: 4,
-      title: "Tour 4",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhO3gLOhBSNm5F4V2uVty_ogsxgWfInGaelA&s",
-      days: "7 ngày 6 đêm",
-    },
-    {
-      id: 5,
-      title: "Tour 5",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhO3gLOhBSNm5F4V2uVty_ogsxgWfInGaelA&s",
-      days: "8 ngày 7 đêm",
-    },
-    {
-      id: 6,
-      title: "Tour 6",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhO3gLOhBSNm5F4V2uVty_ogsxgWfInGaelA&s",
-      days: "9 ngày 8 đêm",
-    },
-  ];
 
   const authContext = useAuth();
   const Logout = () => {
@@ -385,38 +336,6 @@ function HomePage() {
           </Typography>
 
           <CardPopularTour />
-          {/* <Box
-            sx={{
-              width: "100%",
-              padding: 2,
-              mt: 3,
-              mx: "auto",
-              maxWidth: "1200px",
-            }}
-          >
-            <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
-              {itemtest.map((item, index) => (
-                <Card key={item.id} sx={{ borderRadius: 2 }}>
-                  <CardMedia
-                    component="img"
-                    image={item.img}
-                    alt={item.title}
-                    sx={{
-                      width: "100%",
-                      height: heights[index % heights.length], // Gán chiều cao từ mảng
-                      objectFit: "cover",
-                      display: "block",
-                      borderRadius: 1,
-                    }}
-                  />
-                  <CardContent>
-                    <Typography fontWeight="bold">{item.title}</Typography>
-                    <Typography variant="body2">{item.days}</Typography>
-                  </CardContent>
-                </Card>
-              ))}
-            </Masonry> 
-          </Box>*/}
         </Box>
         {/* about website */}
         <MotionBox
