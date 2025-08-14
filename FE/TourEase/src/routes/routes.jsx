@@ -9,11 +9,13 @@ import DestinationPage from "../pages/users/destinationPage/DestinationPage";
 
 import HomePage from "../pages/users/homePage/HomePage";
 import IntroductionPage from "../pages/users/introductionPage/IntroductionPage";
+import TourDetail from "../pages/users/tourDetail/TourDetail";
 import TourPage from "../pages/users/tourPage/TourPage";
 
 const defaultRoutes = [
   { path: config.routes.home, component: HomePage },
   { path: config.routes.tourPage, component: TourPage },
+  { path: config.routes.tourDetail, component: TourDetail },
   { path: config.routes.introductionPage, component: IntroductionPage },
   { path: config.routes.destinationPage, component: DestinationPage },
   { path: config.routes.contactPage, component: ContactPage },
