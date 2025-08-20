@@ -5,6 +5,7 @@ const routes = {
   introductionPage: "/introduction",
   destinationPage: "/destinations",
   contactPage: "/contact",
+  orderDetailTour: "/order-detail-tour",
   login: "/login",
   register: "/register",
 
