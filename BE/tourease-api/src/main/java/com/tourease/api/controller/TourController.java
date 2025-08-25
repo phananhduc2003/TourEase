@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tourease.api.entity.Tour;
+import com.tourease.api.exception.ResourceNotFoundException;
 import com.tourease.api.service.TourService;
 
 @RestController
@@ -23,30 +24,26 @@ public class TourController {
 	
 	@GetMapping("/latest")
 	public ResponseEntity<List<Tour>> getLatestTours() {
-		try {
+		
 			List<Tour> tours = tourService.getLatestTours();
 			
 			if (tours.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-			
-			return ResponseEntity.ok(tours);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	            throw new ResourceNotFoundException("Không có tour nào mới");
+	        }
+
+	        return ResponseEntity.ok(tours);
+		
 	}
 	
 	@GetMapping("/popular")
 	public ResponseEntity<List<Tour>> getPopularTours() {
-		try {
+		
 			List<Tour> tours = tourService.getPopularTours();
 			
 			if(tours.isEmpty()) {
-				return ResponseEntity.noContent().build();
-			}
-			return ResponseEntity.ok(tours);
-		} catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	            throw new ResourceNotFoundException("Không có tour phổ biến nào");
+	        }
+
+	        return ResponseEntity.ok(tours);
 	}
 }
