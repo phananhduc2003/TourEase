@@ -18,22 +18,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) {
-    	try {
-            AuthResponse response = authService.authenticate(request);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
+    	
+    	AuthResponse response = authService.authenticate(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        try {
-            AuthResponse response = authService.register(request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
-        }
+    	AuthResponse response = authService.register(request);
+        return ResponseEntity.ok(response);
+        
     }
 }
