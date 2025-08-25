@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tourease.api.entity.Tour;
@@ -36,4 +37,25 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
 		    LIMIT 6
 		    """, nativeQuery = true)
     List<Tour> findPopularTours();
+	
+	/**
+     * Tìm tours với các filters
+     * Sử dụng @Query để có thể filter linh hoạt
+     */
+    @Query("SELECT t FROM Tour t WHERE t.availability = true " +
+           "AND (:destination IS NULL OR t.destination = :destination) " +
+           "AND (:minPrice IS NULL OR t.priceAdult >= :minPrice) " +
+           "AND (:maxPrice IS NULL OR t.priceAdult <= :maxPrice)")
+    Page<Tour> findToursWithFilters(
+        @Param("destination") String destination,
+        @Param("minPrice") Double minPrice, 
+        @Param("maxPrice") Double maxPrice,
+        Pageable pageable
+    );
+    
+    /**
+     * Lấy danh sách các destination có sẵn (để tạo options cho filter)
+     */
+    @Query("SELECT DISTINCT t.destination FROM Tour t WHERE t.availability = true AND t.destination IS NOT NULL")
+    List<String> findDistinctDestinations();
 }
