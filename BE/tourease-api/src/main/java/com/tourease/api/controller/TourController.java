@@ -54,14 +54,14 @@ public class TourController {
 	public ResponseEntity<TourPageResponse> getAllTours(
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "9") int size,
-			@RequestParam(required = false) String destination,
+			@RequestParam(required = false) List<String> destinations,
 			@RequestParam(required = false) Double minPrice,
 			@RequestParam(required = false) Double maxPrice,
 			@RequestParam(defaultValue = "tourID") String sortBy,
 			@RequestParam(defaultValue = "desc") String sortDir) {
 			
 			Page<Tour> tourPage = tourService.getToursWithFilters(
-				page, size, destination, minPrice, maxPrice, sortBy, sortDir
+				page, size, destinations, minPrice, maxPrice, sortBy, sortDir
 			);
 			
 			TourPageResponse response = TourPageResponse.builder()

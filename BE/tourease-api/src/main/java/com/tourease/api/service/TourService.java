@@ -31,30 +31,6 @@ public class TourService {
 		return tourRepository.findPopularTours();
 	}
 	
-
-	/**
-	 * Lấy tours với filtering và pagination
-	 */
-	public Page<Tour> getToursWithFilters(int page, int size, String destination, 
-	                                     Double minPrice, Double maxPrice, 
-	                                     String sortBy, String sortDir) {
-		
-		// Tạo Sort object
-		Sort sort = Sort.by(Sort.Direction.fromString(sortDir), getSortField(sortBy));
-		
-		// Tạo Pageable với sort
-		Pageable pageable = PageRequest.of(page, size, sort);
-		
-		// Gọi repository với filters
-		return tourRepository.findToursWithFilters(destination, minPrice, maxPrice, pageable);
-	}
-	
-	/**
-	 * Lấy danh sách destinations có sẵn
-	 */
-	public List<String> getAvailableDestinations() {
-		return tourRepository.findDistinctDestinations();
-	}
 	
 	/**
 	 * Map sortBy parameter sang field name thực tế
@@ -75,4 +51,35 @@ public class TourService {
 				return "tourID"; // Default sort by ID
 		}
 	}
+	
+
+	/**
+	 * Lấy tours với filtering và pagination
+	 */
+	public Page<Tour> getToursWithFilters(int page, int size, List<String> destinations, 
+            Double minPrice, Double maxPrice, 
+            String sortBy, String sortDir) {
+
+		// Tạo Sort object
+		Sort sort = Sort.by(Sort.Direction.fromString(sortDir), getSortField(sortBy));
+
+		// Tạo Pageable với sort
+		Pageable pageable = PageRequest.of(page, size, sort);
+		
+		List<String> finalDestinations = (destinations == null || destinations.isEmpty()) ? null : destinations;
+
+		// Gọi repository với filters
+		return tourRepository.findToursWithFilters(finalDestinations, minPrice, maxPrice, pageable);
+	}
+	
+	
+	
+	/**
+	 * Lấy danh sách destinations có sẵn
+	 */
+	public List<String> getAvailableDestinations() {
+		return tourRepository.findDistinctDestinations();
+	}
+	
+	
 }
