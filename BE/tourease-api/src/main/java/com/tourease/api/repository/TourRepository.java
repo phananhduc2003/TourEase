@@ -40,18 +40,17 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
 	
 	/**
      * Tìm tours với các filters
-     * Sử dụng @Query để có thể filter linh hoạt
      */
-    @Query("SELECT t FROM Tour t WHERE t.availability = true " +
-           "AND (:destination IS NULL OR t.destination = :destination) " +
-           "AND (:minPrice IS NULL OR t.priceAdult >= :minPrice) " +
-           "AND (:maxPrice IS NULL OR t.priceAdult <= :maxPrice)")
-    Page<Tour> findToursWithFilters(
-        @Param("destination") String destination,
-        @Param("minPrice") Double minPrice, 
-        @Param("maxPrice") Double maxPrice,
-        Pageable pageable
-    );
+	@Query("SELECT t FROM Tour t WHERE t.availability = true " +
+		       "AND (:destinations IS NULL OR t.destination IN :destinations) " +
+		       "AND (:minPrice IS NULL OR t.priceAdult >= :minPrice) " +
+		       "AND (:maxPrice IS NULL OR t.priceAdult <= :maxPrice)")
+	    Page<Tour> findToursWithFilters(
+	        @Param("destinations") List<String> destinations,
+	        @Param("minPrice") Double minPrice, 
+	        @Param("maxPrice") Double maxPrice,
+	        Pageable pageable
+	    );
     
     /**
      * Lấy danh sách các destination có sẵn (để tạo options cho filter)
