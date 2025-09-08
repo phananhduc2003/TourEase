@@ -1,6 +1,7 @@
 package com.tourease.api.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,18 @@ public class TourService {
 	
 	@Autowired
 	private TourRepository tourRepository;
+	
+	public Optional<Tour> getTourById(Integer tourID) {
+		return tourRepository.findById( tourID );
+	}
+	
+	/**
+	 * Lấy danh sách destinations có sẵn
+	 */
+	public List<String> getAvailableDestinations() {
+		return tourRepository.findDistinctDestinations();
+	}
+	
 	
 	public List<Tour> getLatestTours() {
 		Pageable pageable = PageRequest.of(0, 8);
@@ -74,12 +87,6 @@ public class TourService {
 	
 	
 	
-	/**
-	 * Lấy danh sách destinations có sẵn
-	 */
-	public List<String> getAvailableDestinations() {
-		return tourRepository.findDistinctDestinations();
-	}
-	
+
 	
 }

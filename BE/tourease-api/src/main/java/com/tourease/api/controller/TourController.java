@@ -1,6 +1,7 @@
 package com.tourease.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,17 @@ public class TourController {
 	
 	@Autowired
 	private TourService tourService;
+	
+	@GetMapping("/{tourID}")
+	public ResponseEntity<Tour> getTourById(@PathVariable("tourID") Integer tourID) {
+		Optional<Tour> tour = tourService.getTourById(tourID);
+		
+		if(tour.isEmpty()) {
+			throw new ResourceNotFoundException("Khong tim thay Tour");
+		}
+		
+		return ResponseEntity.ok(tour.get());
+	}
 	
 	@GetMapping("/latest")
 	public ResponseEntity<List<Tour>> getLatestTours() {

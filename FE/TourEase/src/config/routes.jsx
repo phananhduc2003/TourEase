@@ -1,7 +1,7 @@
 const routes = {
   home: "/",
   tourPage: "/tours",
-  tourDetail: "/tour-detail",
+  tourDetail: "/tour-detail/:tourId",
   introductionPage: "/introduction",
   destinationPage: "/destinations",
   contactPage: "/contact",
