@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Grid,
   List,
   ListItem,
@@ -10,14 +9,51 @@ import {
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import FolderSpecialIcon from "@mui/icons-material/FolderSpecial";
 import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
+import { ApiDetailTour } from "../../../api/user/ApiDetailTour";
 
 function TourDetail() {
+  const { tourId } = useParams();
+  const [tourDetail, setTourDetail] = useState([]);
+  console.log("Tour ID from URL:", tourId);
+  useEffect(() => {
+    if (tourId) {
+      retrieveTour();
+    }
+  }, [tourId]);
+
+  const retrieveTour = () => {
+    ApiDetailTour(tourId)
+      .then((response) => {
+        setTourDetail(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching tour details:", error);
+      });
+  };
+  console.log("Tour Detail Data:", tourDetail);
+
+  // Format giá tiền
+  const formatPrice = (price) => {
+    return price?.toLocaleString("vi-VN");
+  };
+
+  // Kiểm tra nếu chưa có dữ liệu
+  if (!tourDetail) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+        <Typography>Đang tải thông tin tour...</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
       <Box sx={{ width: "80%", display: "flex", flexDirection: "column" }}>
         <Typography variant="h4" fontWeight={"bold"} sx={{ mt: 5 }}>
-          MIỀN BẮC 6N5Đ | HÀ NỘI – NINH BÌNH – HẠ LONG – YÊN TỬ – SAPA (CHƯA BAO
-          GỒM VÉ MÁY BAY)
+          {tourDetail.title}
         </Typography>
         <Box>
           <Grid container spacing={0.5} sx={{ mt: 2 }}>
@@ -25,8 +61,12 @@ function TourDetail() {
             <Grid item xs={12} md={6}>
               <Box
                 component="img"
-                src="https://kichcaudulichtphcm.vn/wp-content/uploads/2024/08/thanh-pho-hoi-an-quang-nam.jpg"
-                alt="Ảnh lớn"
+                src={
+                  tourDetail.images && tourDetail.images[0]
+                    ? tourDetail.images[0]
+                    : "https://via.placeholder.com/600x400?text=No+Image"
+                }
+                alt="Ảnh chính tour"
                 sx={{
                   width: "100%",
                   height: "100%",
@@ -39,58 +79,25 @@ function TourDetail() {
             {/* Ảnh nhỏ bên phải */}
             <Grid item xs={12} md={6}>
               <Grid container spacing={0.5}>
-                <Grid item xs={3} md={6}>
-                  <Box
-                    component="img"
-                    src="https://kichcaudulichtphcm.vn/wp-content/uploads/2024/08/thanh-pho-hoi-an-quang-nam.jpg"
-                    alt="Ảnh nhỏ 1"
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      boxShadow: 2,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={3} md={6}>
-                  <Box
-                    component="img"
-                    src="https://kichcaudulichtphcm.vn/wp-content/uploads/2024/08/thanh-pho-hoi-an-quang-nam.jpg"
-                    alt="Ảnh nhỏ 2"
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      boxShadow: 2,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={3} md={6}>
-                  <Box
-                    component="img"
-                    src="https://kichcaudulichtphcm.vn/wp-content/uploads/2024/08/thanh-pho-hoi-an-quang-nam.jpg"
-                    alt="Ảnh nhỏ 3"
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      boxShadow: 2,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={3} md={6}>
-                  <Box
-                    component="img"
-                    src="https://kichcaudulichtphcm.vn/wp-content/uploads/2024/08/thanh-pho-hoi-an-quang-nam.jpg"
-                    alt="Ảnh nhỏ 4"
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      boxShadow: 2,
-                    }}
-                  />
-                </Grid>
+                {[1, 2, 3, 4].map((index) => (
+                  <Grid item xs={6} md={6} key={index}>
+                    <Box
+                      component="img"
+                      src={
+                        tourDetail.images && tourDetail.images[index]
+                          ? tourDetail.images[index]
+                          : "https://via.placeholder.com/300x200?text=No+Image"
+                      }
+                      alt={`Ảnh tour ${index + 1}`}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        boxShadow: 2,
+                      }}
+                    />
+                  </Grid>
+                ))}
               </Grid>
             </Grid>
           </Grid>
@@ -170,57 +177,37 @@ function TourDetail() {
                   />
                   Lịch Trình
                 </Typography>
-                <Box
-                  sx={{ width: "100%", border: "1px solid #ccc", p: 3, mb: 2 }}
-                >
-                  <Box sx={{ display: "flex" }}>
-                    <ArrowCircleRightIcon sx={{ color: "primary.main" }} />{" "}
-                    <Typography
-                      fontWeight={"bold"}
+
+                {tourDetail.itineraryDays &&
+                tourDetail.itineraryDays.length > 0 ? (
+                  tourDetail.itineraryDays.map((day) => (
+                    <Box
+                      key={day.id}
                       sx={{
-                        ml: 2,
-                        fontSize: "1rem",
-                        textTransform: "uppercase",
+                        width: "100%",
+                        border: "1px solid #ccc",
+                        p: 3,
+                        mb: 2,
                       }}
                     >
-                      Ngay 1- Dang Nang- Nha Trang
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{ width: "100%", border: "1px solid #ccc", p: 3, mb: 2 }}
-                >
-                  <Box sx={{ display: "flex" }}>
-                    <ArrowCircleRightIcon sx={{ color: "primary.main" }} />{" "}
-                    <Typography
-                      fontWeight={"bold"}
-                      sx={{
-                        ml: 2,
-                        fontSize: "1rem",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Ngay 1- Dang Nang- Nha Trang
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{ width: "100%", border: "1px solid #ccc", p: 3, mb: 2 }}
-                >
-                  <Box sx={{ display: "flex" }}>
-                    <ArrowCircleRightIcon sx={{ color: "primary.main" }} />{" "}
-                    <Typography
-                      fontWeight={"bold"}
-                      sx={{
-                        ml: 2,
-                        fontSize: "1rem",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Ngay 1- Dang Nang- Nha Trang
-                    </Typography>
-                  </Box>
-                </Box>
+                      <Box sx={{ display: "flex" }}>
+                        <ArrowCircleRightIcon sx={{ color: "primary.main" }} />{" "}
+                        <Typography
+                          fontWeight={"bold"}
+                          sx={{
+                            ml: 2,
+                            fontSize: "1rem",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {day.title}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))
+                ) : (
+                  <Box>Không có lịch trình</Box>
+                )}
               </Box>
             </Grid>
             <Grid item xs={12} sm={4} md={4}>
@@ -242,7 +229,7 @@ function TourDetail() {
                   - Giờ Khởi Hành: 8:00
                 </Typography>
                 <Typography sx={{ mt: 1, ml: 4, fontSize: "1rem" }}>
-                  - Thời Gian: 3 ngày 2 đêm
+                  - {tourDetail.duration}
                 </Typography>
                 <Typography
                   sx={{
@@ -255,7 +242,7 @@ function TourDetail() {
                     fontWeight: "bold",
                   }}
                 >
-                  6237.2002
+                  {formatPrice(tourDetail.priceAdult)}
                   <span style={{ fontSize: "0.8rem", marginLeft: "4px" }}>
                     VND
                   </span>
@@ -273,6 +260,7 @@ function TourDetail() {
                       backgroundColor: "primary.main",
                       textAlign: "center",
                       fontSize: "1.5rem",
+                      cursor: "pointer",
                       py: 2,
                       mb: 3,
                     }}

@@ -1,6 +1,7 @@
 package com.tourease.api.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,8 @@ import com.tourease.api.entity.Tour;
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour, Integer> {
+	
+	
 	/**
      * Alternative: Lấy ra tours mới nhất
      */

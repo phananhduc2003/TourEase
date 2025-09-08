@@ -17,14 +17,17 @@ import {
   Typography,
   Pagination,
 } from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { ApiFilterTour } from "../../../api/user/ApiFilterTour";
 import { ApiGetDestinations } from "../../../api/user/ApiGetDestinations";
 import TourList from "../../../components/TourListTourPage/TourList";
 import FilterPanel from "../../../components/FilterPanelTourPage/FilterPanel";
 
 function TourPage() {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tours, setTours] = useState([]);
@@ -153,6 +156,10 @@ function TourPage() {
     });
   };
 
+  const handleTourClick = (tourID) => {
+    navigate(`/tour-detail/${tourID}`);
+  };
+
   return (
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
       <Box sx={{ width: "80%" }}>
@@ -185,6 +192,7 @@ function TourPage() {
               onPageChange={handlePageChange}
               sortOption={sortOption}
               onSortChange={handleSortChange}
+              onTourDetailClick={handleTourClick}
             />
           </Grid>
         </Grid>

@@ -22,6 +22,7 @@ function TourList({
   onPageChange,
   sortOption,
   onSortChange,
+  onTourDetailClick,
 }) {
   if (loading) {
     return (
@@ -59,6 +60,10 @@ function TourList({
       </Box>
     );
   }
+
+  const formatPrice = (price) => {
+    return price?.toLocaleString("vi-VN");
+  };
 
   return (
     <Box
@@ -124,12 +129,14 @@ function TourList({
                 }}
               >
                 <Box
+                  onClick={() => onTourDetailClick(tour.tourID)}
                   sx={{
                     aspectRatio: "4/3",
                     width: "100%",
                     backgroundImage: `url(${tour.images[0]})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    cursor: "pointer",
                     borderRadius: 1,
                     transition: "transform 0.3s ease",
                     "&:hover": {
@@ -146,11 +153,10 @@ function TourList({
                   }}
                 >
                   <Typography variant="caption" sx={{ mt: 2 }}>
-                    {" "}
                     <LocationOnIcon
                       sx={{ verticalAlign: "middle", fontSize: "small" }}
-                    />{" "}
-                    {tour.destination}{" "}
+                    />
+                    {tour.destination}
                   </Typography>
                   <Box
                     sx={{
@@ -159,8 +165,8 @@ function TourList({
                       alignItems: "flex-start",
                     }}
                   >
-                    {" "}
                     <Typography
+                      onClick={() => onTourDetailClick(tour.tourID)}
                       variant="h6"
                       sx={{
                         fontWeight: "bold",
@@ -170,37 +176,32 @@ function TourList({
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        cursor: "pointer",
                       }}
                     >
                       {tour.title}
                     </Typography>
                   </Box>
                   <Typography variant="body2" sx={{ mt: 1 }}>
-                    {" "}
-                    {tour.duration}{" "}
+                    {tour.duration}
                   </Typography>
                 </Box>
                 <Divider sx={{ my: 4 }} />
                 <Box sx={{ display: "flex", mx: 2, mt: 2, mb: 1 }}>
-                  {" "}
                   <Grid container sx={{ width: "100%" }}>
-                    {" "}
                     <Grid item xs={6}>
-                      {" "}
                       <Typography variant="h6" fontWeight="bold">
-                        {" "}
-                        {tour.priceAdult}{" "}
+                        {formatPrice(tour.priceAdult)}
                         <Typography
                           component="span"
                           variant="body2"
                           color="text.secondary"
                           sx={{ fontSize: "0.5rem" }}
                         >
-                          {" "}
-                          VND{" "}
-                        </Typography>{" "}
-                      </Typography>{" "}
-                    </Grid>{" "}
+                          VND
+                        </Typography>
+                      </Typography>
+                    </Grid>
                     <Grid
                       item
                       xs={6}
@@ -210,7 +211,6 @@ function TourList({
                         position: "relative",
                       }}
                     >
-                      {" "}
                       <Button
                         variant="contained"
                         color="primary"
@@ -222,11 +222,10 @@ function TourList({
                           top: -4,
                         }}
                       >
-                        {" "}
-                        Đặt Ngay{" "}
-                      </Button>{" "}
-                    </Grid>{" "}
-                  </Grid>{" "}
+                        Đặt Ngay
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Box>
               </Box>
             </Grid>

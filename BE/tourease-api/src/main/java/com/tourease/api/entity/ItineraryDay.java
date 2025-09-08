@@ -1,6 +1,8 @@
 package com.tourease.api.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,6 +40,7 @@ public class ItineraryDay {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)
-    @ToString.Exclude 
+    @ToString.Exclude
+    @JsonIgnore
     private Tour tour;
 }
