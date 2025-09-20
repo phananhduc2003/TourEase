@@ -68,4 +68,14 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.UNAUTHORIZED, "Authentication Failed", "Invalid username or password", request.getRequestURI());
     }
     
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<?> handleUnsupportedOperation(UnsupportedOperationException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Unsupported Operation", ex.getMessage(), request.getRequestURI());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Invalid Request", ex.getMessage(), request.getRequestURI());
+    }
+    
 }

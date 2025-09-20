@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tourease.api.DTO.TourOrderedResponse;
 import com.tourease.api.DTO.TourPageResponse;
 import com.tourease.api.entity.Tour;
 import com.tourease.api.exception.ResourceNotFoundException;
@@ -36,6 +37,14 @@ public class TourController {
 		}
 		
 		return ResponseEntity.ok(tour.get());
+	}
+	
+	@GetMapping("/{tourID}/tour-odered")
+	public ResponseEntity<TourOrderedResponse> getTourOrderedInfo(@PathVariable("tourID") Integer tourID) {
+		
+		TourOrderedResponse tour = tourService.getTourOrderedInfo(tourID);
+		
+		return ResponseEntity.ok(tour);
 	}
 	
 	@GetMapping("/latest")

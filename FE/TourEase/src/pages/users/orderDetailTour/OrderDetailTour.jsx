@@ -16,10 +16,152 @@ import {
 import PaymentIcon from "@mui/icons-material/Payment";
 import CurrencyRubleIcon from "@mui/icons-material/CurrencyRuble";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ApiTourOrderInfo } from "../../../api/user/ApiTourOrderInfo";
+import { useParams } from "react-router-dom";
+import { ApiCheckout } from "../../../api/user/ApiCheckout";
+import { useAuth } from "../../../context/AuthContext";
 
 function OrderDetailTour() {
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const useContext = useAuth();
+
+  const userId = useContext.idUser;
+
+  const { tourId } = useParams();
+
+  const [paymentMethod, setPaymentMethod] = useState("OFFICE_PAYMENT");
+
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [specialRequests, setSpecialRequests] = useState("");
+  const [contactAddress, setContactAddress] = useState("");
+
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  const [numAdults, setNumAdults] = useState(1);
+  const [numChildren, setNumChildren] = useState(0);
+  const [orderInfo, setOrderInfo] = useState([]);
+
+  const priceTotalAdults = orderInfo?.priceAdult
+    ? orderInfo.priceAdult * numAdults
+    : 0;
+  const priceTotalChildren = orderInfo?.priceChild
+    ? orderInfo.priceChild * numChildren
+    : 0;
+  const totalPrice = priceTotalAdults + priceTotalChildren;
+
+  useEffect(() => {
+    getApiTourOrderInfo(tourId);
+  }, [tourId]);
+
+  const getApiTourOrderInfo = (orderId) => {
+    ApiTourOrderInfo(orderId)
+      .then((res) => {
+        setOrderInfo(res.data);
+        console.log("Tour order info:", res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching tour order info:", err);
+      });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!contactName || !contactEmail || !contactPhone || !contactAddress) {
+      alert("Vui lòng điền đầy đủ thông tin liên lạc");
+      return;
+    }
+
+    if (!orderInfo?.tourId) {
+      alert("Chưa load được thông tin tour. Vui lòng thử lại sau.");
+      return;
+    }
+
+    const formData = {
+      contactName,
+      contactEmail,
+      contactPhone,
+      contactAddress,
+      numAdults,
+      numChildren,
+      specialRequests,
+      paymentMethod,
+      userId,
+      tourId: orderInfo.tourId,
+      agreeToTerms,
+    };
+
+    try {
+      console.log("Sending checkout data:", formData);
+
+      // Call API checkout
+      const response = await ApiCheckout(formData);
+      const responseData = response.data; // Thêm dòng này
+
+      if (responseData.success) {
+        switch (responseData.paymentStatus) {
+          case "PENDING":
+            alert(responseData.message);
+            break;
+
+          case "REDIRECT":
+            window.location.href = responseData.redirectUrl;
+            break;
+
+          default:
+            alert("Checkout thành công!");
+        }
+      }
+    } catch (error) {
+      console.error("Full error object:", error); // Debug error
+      console.error("Error response:", error.response?.data);
+
+      // Xử lý lỗi
+      if (error.response) {
+        const errorData = error.response.data;
+        alert(
+          `Lỗi: ${errorData?.message || "Có lỗi xảy ra khi xử lý thanh toán"}`
+        );
+      } else if (error.request) {
+        alert("Lỗi kết nối. Vui lòng thử lại sau.");
+      } else {
+        alert(`Có lỗi xảy ra: ${error.message || "Không xác định"}`);
+      }
+    }
+  };
+
+  const handleName = (e) => {
+    setContactName(e.target.value);
+  };
+
+  const handleEmail = (e) => {
+    setContactEmail(e.target.value);
+  };
+
+  const handlePhoneNumber = (e) => {
+    setContactPhone(e.target.value);
+  };
+  const handleAddress = (e) => {
+    setContactAddress(e.target.value);
+  };
+
+  const handleCheckboxChange = (event) => {
+    setAgreeToTerms(event.target.checked);
+  };
+
+  const handleAdultsChange = (increment) => {
+    setNumAdults((prev) => Math.max(1, prev + increment));
+  };
+
+  const handleChildrenChange = (increment) => {
+    setNumChildren((prev) => Math.max(0, prev + increment));
+  };
+
+  const formatPrice = (price) => {
+    return price?.toLocaleString("vi-VN");
+  };
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
@@ -32,11 +174,7 @@ function OrderDetailTour() {
           Tổng Quan Về Chuyến Đi
         </Typography>
 
-        <Box
-          component="form"
-          // onSubmit={handleSubmit}
-          method="POST"
-        >
+        <Box component="form" onSubmit={handleSubmit} method="POST">
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12} md={8}>
               <Box
@@ -61,13 +199,13 @@ function OrderDetailTour() {
                         Họ và tên
                       </Typography>
                       <TextField
-                        // onChange={handlePassword}
+                        onChange={handleName}
+                        id="contactName"
+                        name="contactName"
                         required
                         fullWidth
                         autoComplete="off"
                         type="text"
-                        id="name"
-                        name="name"
                         sx={{
                           mb: 3,
                           backgroundColor: "background.default",
@@ -82,13 +220,13 @@ function OrderDetailTour() {
                         Email
                       </Typography>
                       <TextField
-                        // onChange={handlePassword}
+                        onChange={handleEmail}
+                        id="Email"
+                        name="contactEmail"
                         required
                         fullWidth
                         autoComplete="off"
                         type="text"
-                        id="Email"
-                        name="email"
                         sx={{
                           mb: 3,
                           backgroundColor: "background.default",
@@ -103,13 +241,13 @@ function OrderDetailTour() {
                         Số điện thoại
                       </Typography>
                       <TextField
-                        // onChange={handlePassword}
+                        onChange={handlePhoneNumber}
+                        id="phoneNumber"
+                        name="contactPhone"
                         required
                         fullWidth
                         autoComplete="off"
                         type="text"
-                        id="phoneNumber"
-                        name="phoneNumber"
                         sx={{
                           mb: 3,
                           backgroundColor: "background.default",
@@ -124,13 +262,13 @@ function OrderDetailTour() {
                         Địa chỉ
                       </Typography>
                       <TextField
-                        // onChange={handlePassword}
+                        onChange={handleAddress}
+                        id="address"
+                        name="contactAddress"
                         required
                         fullWidth
                         autoComplete="off"
                         type="text"
-                        id="address"
-                        name="address"
                         sx={{
                           mb: 3,
                           backgroundColor: "background.default",
@@ -165,6 +303,7 @@ function OrderDetailTour() {
                         }}
                       >
                         <Box
+                          onClick={() => handleAdultsChange(-1)}
                           sx={{
                             px: 1,
                             border: 1, // = "1px solid"
@@ -180,9 +319,10 @@ function OrderDetailTour() {
                           variant="h6"
                           sx={{ mx: 2, color: "primary.main" }}
                         >
-                          0
+                          {numAdults}
                         </Typography>
                         <Box
+                          onClick={() => handleAdultsChange(1)}
                           sx={{
                             px: 1,
                             border: 1, // = "1px solid"
@@ -215,6 +355,7 @@ function OrderDetailTour() {
                         }}
                       >
                         <Box
+                          onClick={() => handleChildrenChange(-1)}
                           sx={{
                             px: 1,
                             border: 1, // = "1px solid"
@@ -230,9 +371,10 @@ function OrderDetailTour() {
                           variant="h6"
                           sx={{ mx: 2, color: "primary.main" }}
                         >
-                          0
+                          {numChildren}
                         </Typography>
                         <Box
+                          onClick={() => handleChildrenChange(1)}
                           sx={{
                             px: 1,
                             border: 1, // = "1px solid"
@@ -273,7 +415,12 @@ function OrderDetailTour() {
                   </Typography>
                   <FormGroup>
                     <FormControlLabel
-                      control={<Checkbox defaultChecked />}
+                      control={
+                        <Checkbox
+                          checked={agreeToTerms}
+                          onChange={handleCheckboxChange}
+                        />
+                      }
                       label="Tôi đã đọc và đồng ý với Điều khoản thanh toán"
                     />
                   </FormGroup>
@@ -298,24 +445,26 @@ function OrderDetailTour() {
                         mb: 1,
                         boxShadow: "none",
                         border:
-                          paymentMethod === "money" ? "3px solid" : "1px solid",
+                          paymentMethod === "OFFICE_PAYMENT"
+                            ? "3px solid"
+                            : "1px solid",
                         borderColor:
-                          paymentMethod === "money"
+                          paymentMethod === "OFFICE_PAYMENT"
                             ? "primary.main"
                             : "grey.300",
                         cursor: "pointer",
                         backgroundColor:
-                          paymentMethod === "money"
+                          paymentMethod === "OFFICE_PAYMENT"
                             ? "background.default"
                             : "background.default",
                       }}
-                      onClick={() => setPaymentMethod("money")}
+                      onClick={() => setPaymentMethod("OFFICE_PAYMENT")}
                     >
                       <CurrencyRubleIcon
                         sx={{ mr: 1, color: "primary.main" }}
                       />
                       <FormControlLabel
-                        value="money"
+                        value="OFFICE_PAYMENT"
                         sx={{ ml: 1, color: "text.primary" }}
                         control={<Radio sx={{ display: "none" }} />}
                         label="Thanh toán tại văn phòng"
@@ -331,9 +480,9 @@ function OrderDetailTour() {
                         mb: 1,
                         boxShadow: "none",
                         border:
-                          paymentMethod === "card" ? "3px solid" : "1px solid",
+                          paymentMethod === "VNPAY" ? "3px solid" : "1px solid",
                         borderColor:
-                          paymentMethod === "card"
+                          paymentMethod === "VNPAY"
                             ? "primary.main"
                             : "grey.300",
                         cursor: "pointer",
@@ -342,11 +491,11 @@ function OrderDetailTour() {
                             ? "background.default"
                             : "background.default",
                       }}
-                      onClick={() => setPaymentMethod("card")}
+                      onClick={() => setPaymentMethod("VNPAY")}
                     >
                       <PaymentIcon sx={{ mr: 1, color: "primary.main" }} />
                       <FormControlLabel
-                        value="card"
+                        value="VNPAY"
                         sx={{ ml: 1, color: "text.primary" }}
                         control={<Radio sx={{ display: "none" }} />}
                         label="Thanh toán bằng Vn Pay"
@@ -372,7 +521,7 @@ function OrderDetailTour() {
                             ? "background.default"
                             : "background.default",
                       }}
-                      onClick={() => setPaymentMethod("gPay")}
+                      // onClick={() => setPaymentMethod("gPay")}
                     >
                       <GoogleIcon sx={{ mr: 1, color: "primary.main" }} />
                       <FormControlLabel
@@ -397,14 +546,13 @@ function OrderDetailTour() {
                 }}
               >
                 <Typography sx={{ fontSize: "1.2rem", fontWeight: 500, mb: 3 }}>
-                  BỜ TÂY HOA KỲ – KẾT HỢP THĂM THÂN 8N7Đ | LOS ANGELES – LAS
-                  VEGAS – SAN DIEGO – MEXICO
+                  {orderInfo.title}
                 </Typography>
                 <Typography variant="body2" sx={{ fontSize: "0.5 rem", mb: 2 }}>
-                  Ngày khởi hành: 10-01-2025
+                  Ngày khởi hành: {orderInfo.startDate}
                 </Typography>
                 <Typography variant="body2" sx={{ fontSize: "0.5 rem", mb: 3 }}>
-                  Ngày kết thúc: 14-01-2025
+                  Ngày kết thúc: {orderInfo.endDate}
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -415,7 +563,7 @@ function OrderDetailTour() {
                     Người lớn:
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.5 rem" }}>
-                    0 VNĐ
+                    {formatPrice(priceTotalAdults)} VND
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -426,7 +574,7 @@ function OrderDetailTour() {
                     Trẻ em:
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.5 rem" }}>
-                    0 VNĐ
+                    {formatPrice(priceTotalChildren)} VND
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -440,7 +588,7 @@ function OrderDetailTour() {
                     fontWeight={"bold"}
                     sx={{ fontSize: "1.4 rem", mb: 2 }}
                   >
-                    0 VNĐ
+                    {formatPrice(totalPrice)} VND
                   </Typography>
                 </Box>
                 <Divider sx={{ mb: 3 }} />
@@ -483,6 +631,7 @@ function OrderDetailTour() {
 
                 <Button
                   type="submit"
+                  disabled={!agreeToTerms}
                   variant="contained"
                   fullWidth
                   size="large"

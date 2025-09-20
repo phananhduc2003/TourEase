@@ -28,6 +28,8 @@ public class Booking {
     private LocalDate bookingDate;
 
     private Integer numAdults;
+    
+    private Integer numChildren;
 
     private Double  totalPrice;
 
@@ -36,6 +38,18 @@ public class Booking {
     private String bookingStatus;
 
     private String specialRequests;
+    
+    @Column(name = "contact_name")
+    private String contactName;
+    
+    @Column(name = "contact_email")
+    private String contactEmail;
+    
+    @Column(name = "contact_phone")
+    private String contactPhone;
+    
+    @Column(name = "contact_address")
+    private String contactAddress;
 
     // Quan hệ khác (nếu cần)
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
@@ -44,10 +58,14 @@ public class Booking {
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
     private Checkout checkout;
 
-    // Các phương thức bổ sung theo sơ đồ
+ // Các phương thức bổ sung
     public Double calculateTotalPrice() {
-        // Logic tính toán giá trị tổng
-        return Double.valueOf(totalPrice);
+        if (tour != null) {
+            Double adultPrice = numAdults * tour.getPriceAdult();
+            Double childPrice = (numChildren != null ? numChildren : 0) * tour.getPriceChild();
+            this.totalPrice = adultPrice + childPrice;
+        }
+        return this.totalPrice;
     }
 
     public void updatePaymentStatus(String status) {
@@ -56,5 +74,12 @@ public class Booking {
 
     public void updateBookingStatus(String status) {
         this.bookingStatus = status;
+    }
+    
+    // Validate thông tin liên lạc
+    public boolean isContactInfoComplete() {
+        return contactName != null && !contactName.trim().isEmpty() &&
+               contactEmail != null && !contactEmail.trim().isEmpty() &&
+               contactPhone != null && !contactPhone.trim().isEmpty();
     }
 }

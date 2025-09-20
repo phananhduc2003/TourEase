@@ -10,14 +10,16 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import FolderSpecialIcon from "@mui/icons-material/FolderSpecial";
 import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ApiDetailTour } from "../../../api/user/ApiDetailTour";
 
 function TourDetail() {
+  const navigate = useNavigate();
+
   const { tourId } = useParams();
   const [tourDetail, setTourDetail] = useState([]);
-  console.log("Tour ID from URL:", tourId);
+
   useEffect(() => {
     if (tourId) {
       retrieveTour();
@@ -33,7 +35,6 @@ function TourDetail() {
         console.error("Error fetching tour details:", error);
       });
   };
-  console.log("Tour Detail Data:", tourDetail);
 
   // Format giá tiền
   const formatPrice = (price) => {
@@ -48,6 +49,10 @@ function TourDetail() {
       </Box>
     );
   }
+
+  const handleOrderDetailTour = () => {
+    navigate(`/order-detail-tour/${tourId}`);
+  };
 
   return (
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
@@ -255,6 +260,7 @@ function TourDetail() {
                   }}
                 >
                   <Box
+                    onClick={handleOrderDetailTour}
                     sx={{
                       width: "80%",
                       backgroundColor: "primary.main",

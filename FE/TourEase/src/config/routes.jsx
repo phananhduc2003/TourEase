@@ -5,7 +5,8 @@ const routes = {
   introductionPage: "/introduction",
   destinationPage: "/destinations",
   contactPage: "/contact",
-  orderDetailTour: "/order-detail-tour",
+  orderDetailTour: "/order-detail-tour/:tourId",
+  bookingPage: "/booking-page",
   login: "/login",
   register: "/register",
 
