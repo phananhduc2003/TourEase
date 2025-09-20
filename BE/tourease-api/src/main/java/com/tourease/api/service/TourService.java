@@ -10,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.tourease.api.DTO.TourOrderedResponse;
 import com.tourease.api.entity.Tour;
+import com.tourease.api.exception.ResourceNotFoundException;
 import com.tourease.api.repository.TourRepository;
 
 @Service
@@ -21,6 +23,31 @@ public class TourService {
 	
 	public Optional<Tour> getTourById(Integer tourID) {
 		return tourRepository.findById( tourID );
+	}
+	
+	
+	public TourOrderedResponse getTourOrderedInfo(Integer tourId) {
+		Tour tour = tourRepository.findById(tourId)
+				.orElseThrow(() -> new ResourceNotFoundException("khong tim tahy ID: " + tourId));
+		
+		
+		if (!tour.getAvailability()) {
+			throw new ResourceNotFoundException("Tour khong ton tai");
+		}
+		
+		Double defaultTotalPrice = tour.getPriceAdult() * 1 + tour.getPriceChild() * 0;
+		
+		return TourOrderedResponse.builder()
+				.tourId(tour.getTourID())
+				.title(tour.getTitle())
+				.startDate(tour.getStartDate())
+				.endDate(tour.getEndDate())
+				.priceAdult(tour.getPriceAdult())
+				.priceChild(tour.getPriceChild())
+				.defaultAdults(1)
+				.defaultChildren(0)
+				.defaultTotalPrice(defaultTotalPrice)
+				.build();
 	}
 	
 	/**
@@ -84,9 +111,5 @@ public class TourService {
 		// Gọi repository với filters
 		return tourRepository.findToursWithFilters(finalDestinations, minPrice, maxPrice, pageable);
 	}
-	
-	
-	
-
 	
 }

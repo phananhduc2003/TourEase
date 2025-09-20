@@ -4,6 +4,7 @@ import AuthLayout from "../layouts/AuthLayout/AuthLayout";
 import HomeAdmin from "../pages/admin/homeAdmin/HomeAdmin";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/register/Register";
+import BookingPage from "../pages/users/bookingPage/BookingPage";
 import ContactPage from "../pages/users/contactPage/ContactPage";
 import DestinationPage from "../pages/users/destinationPage/DestinationPage";
 
@@ -20,7 +21,12 @@ const defaultRoutes = [
   { path: config.routes.introductionPage, component: IntroductionPage },
   { path: config.routes.destinationPage, component: DestinationPage },
   { path: config.routes.contactPage, component: ContactPage },
-  { path: config.routes.orderDetailTour, component: OrderDetailTour },
+  {
+    path: config.routes.orderDetailTour,
+    component: OrderDetailTour,
+    protected: true,
+  },
+  { path: config.routes.bookingPage, component: BookingPage },
 
   { path: config.routes.login, component: Login, layout: AuthLayout },
   { path: config.routes.register, component: Register, layout: AuthLayout },

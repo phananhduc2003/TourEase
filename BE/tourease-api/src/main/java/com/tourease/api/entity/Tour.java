@@ -82,6 +82,10 @@ public class Tour {
         this.itineraryDays.add(day);
     }
 
+    public String getTourName() {
+        return this.title;
+    }
+
 
 
     
