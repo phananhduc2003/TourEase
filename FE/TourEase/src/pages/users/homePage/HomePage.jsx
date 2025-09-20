@@ -1,5 +1,4 @@
 import { Avatar, Box, Chip, Grid, Stack, Typography } from "@mui/material";
-import { useAuth } from "../../../context/AuthContext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -26,6 +25,7 @@ import featuresBox from "../../../assets/images/imageHome/features-box.jpg";
 import CardInForHomePage from "../../../components/CardInForHomePage/CardInForHomePage";
 import TourCard from "../../../components/TourCard/TourCard";
 import CardPopularTour from "../../../components/CardPopularTour/CardPopularTour";
+import { useNavigate } from "react-router-dom";
 
 const wrapper = {
   display: "flex",
@@ -36,6 +36,8 @@ const wrapper = {
 const MotionBox = motion(Box);
 
 function HomePage() {
+  const navigate = useNavigate();
+
   const heroImages = [hero1, hero2, hero3, hero4, hero5, hero6];
 
   const { ref, inView } = useInView({
@@ -43,9 +45,9 @@ function HomePage() {
     threshold: 0.1,
   });
 
-  const authContext = useAuth();
-  const Logout = () => {
-    authContext.Logout();
+  const handleNavigateToTour = (tourId) => {
+    navigate(`/tour-detail/${tourId}`);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -106,7 +108,7 @@ function HomePage() {
         </Box>
 
         {/* card information tour */}
-        <TourCard />
+        <TourCard onclickChangePage={handleNavigateToTour} />
 
         {/* title and description */}
 
@@ -335,7 +337,7 @@ function HomePage() {
             trải nghiệm phổ biến nhất
           </Typography>
 
-          <CardPopularTour />
+          <CardPopularTour onclickChangePage={handleNavigateToTour} />
         </Box>
         {/* about website */}
         <MotionBox

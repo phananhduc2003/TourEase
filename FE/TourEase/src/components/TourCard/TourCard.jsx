@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { ApiLatestTour } from "../../api/user/ApiLatestTour";
 import { useEffect, useState } from "react";
 
-function TourCard() {
+function TourCard({ onclickChangePage }) {
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -98,6 +98,7 @@ function TourCard() {
         {datas.map((tour, index) => (
           <Grid item xs={12} sm={6} md={3} key={tour.id || `tour-${index}`}>
             <Box
+              onClick={() => onclickChangePage(tour.tourID)}
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -150,7 +151,11 @@ function TourCard() {
                   sx={{ mt: 1, color: "text.secondary" }}
                 >
                   <LocationOnIcon
-                    sx={{ verticalAlign: "middle", fontSize: "small", mr: 0.5 }}
+                    sx={{
+                      verticalAlign: "middle",
+                      fontSize: "small",
+                      mr: 0.5,
+                    }}
                   />
                   {tour.destination || "Chưa cập nhật"}
                 </Typography>

@@ -12,8 +12,8 @@ import {
 import { useEffect, useState } from "react";
 import { ApiPopularTour } from "../../api/user/ApiPopularTour";
 
-function CardPopularTour() {
-  const heights = [280, 350, 180, 396, 320, 250];
+function CardPopularTour({ onclickChangePage }) {
+  const heights = [280, 350, 180, 420, 320, 250];
 
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -107,6 +107,7 @@ function CardPopularTour() {
       <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
         {datas.map((data, index) => (
           <Card
+            onClick={() => onclickChangePage(data.tourID)}
             key={data.tourID}
             sx={{
               borderRadius: 2,
@@ -129,7 +130,17 @@ function CardPopularTour() {
               }}
             />
             <CardContent>
-              <Typography fontWeight="bold">{data.title}</Typography>
+              <Typography
+                fontWeight="bold"
+                sx={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
+                {data.title}
+              </Typography>
               <Typography variant="body2">{data.duration}</Typography>
             </CardContent>
           </Card>
