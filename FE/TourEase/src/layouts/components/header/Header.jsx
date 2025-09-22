@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -8,7 +8,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import logo from "../../../assets/images/logoweb.png";
 import DarkMode from "../../../theme/DarkMode";
@@ -33,19 +33,33 @@ function Header() {
   const menuItems = [
     { name: "Trang Chủ", path: "/" },
     { name: "Giới Thiệu", path: "/introduction" },
-    { name: "Tour", path: "/tours" },
+    { name: "Tour", path: "/tours", extraPaths: ["/tour-detail"] },
     { name: "Điểm Đến", path: "/destinations" },
     { name: "Liên Hệ", path: "/contact" },
   ];
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { isAuthenticated, Logout } = useAuth();
 
   const [activeIndex, setActiveIndex] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
-
   const [anchorEl, setAnchorEl] = useState(null);
+
+  useEffect(() => {
+    const currentIndex = menuItems.findIndex((item) => {
+      if (item.path === "/") {
+        return location.pathname === "/";
+      }
+      // Nếu pathname bắt đầu bằng path hoặc nằm trong extraPaths thì active
+      if (location.pathname.startsWith(item.path)) return true;
+      if (item.extraPaths?.some((p) => location.pathname.startsWith(p)))
+        return true;
+      return false;
+    });
+    setActiveIndex(currentIndex);
+  }, [location.pathname]);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
