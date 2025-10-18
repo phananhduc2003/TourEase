@@ -14,7 +14,7 @@ const theme = extendTheme({
           light: "#ffcc80", // Cam sáng
           main: "#ef6c00", // Cam chính
           dark: "#ffa726", // Cam đậm
-          contrastText: "#ffffff", // Chữ trắng trên nút xanh
+          contrastText: "#2ba84a", // Chữ trắng trên nút xanh
         },
         text: {
           primary: "#0F1214", // Chữ chính màu đen
@@ -43,7 +43,7 @@ const theme = extendTheme({
           light: "#2d3a3a   ",
           main: " #2ba84a ",
           dark: "#B39CD0 ",
-          contrastText: "#ffffff",
+          contrastText: "#ef6c00",
         },
         text: {
           primary: "#E4E4E4",
