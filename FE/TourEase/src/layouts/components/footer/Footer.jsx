@@ -171,6 +171,7 @@ function Footer() {
                     variant="outlined"
                     sx={{
                       flex: 1,
+
                       "& .MuiOutlinedInput-root": {
                         backgroundColor: "white",
                         borderRadius: "25px 0 0 25px",
@@ -186,11 +187,12 @@ function Footer() {
                   <Button
                     variant="contained"
                     sx={{
-                      backgroundColor: "primary.main",
+                      backgroundColor: "background.main",
                       borderRadius: "0 25px 25px 0",
+                      color: "text.primary",
                       px: 3,
                       "&:hover": {
-                        backgroundColor: "#e55a2b",
+                        backgroundColor: "background.main",
                       },
                     }}
                   >
