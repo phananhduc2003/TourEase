@@ -213,13 +213,13 @@ function TourList({
                     >
                       <Button
                         variant="contained"
-                        color="primary"
                         sx={{
                           width: "110px",
                           height: "40px",
                           position: "absolute",
                           right: 0,
                           top: -4,
+                          color: "white",
                         }}
                       >
                         Đặt Ngay

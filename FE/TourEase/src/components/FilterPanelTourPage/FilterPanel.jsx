@@ -36,7 +36,11 @@ function FilterPanel({
     >
       <Box sx={{ mx: 2, mt: 3, display: "flex", flexDirection: "column" }}>
         <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3 }}>
-          <Button variant="contained" color="primary" onClick={onClearFilters}>
+          <Button
+            variant="contained"
+            sx={{ color: "white" }}
+            onClick={onClearFilters}
+          >
             Clear
           </Button>
         </Box>

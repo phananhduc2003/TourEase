@@ -1,22 +1,4 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  CircularProgress,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Alert,
-  Grid,
-  MenuItem,
-  Radio,
-  Rating,
-  Select,
-  Slider,
-  Typography,
-  Pagination,
-} from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

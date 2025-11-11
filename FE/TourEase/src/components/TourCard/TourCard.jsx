@@ -208,13 +208,13 @@ function TourCard({ onclickChangePage }) {
                   <Grid item xs={6} sx={{ textAlign: "right" }}>
                     <Button
                       variant="contained"
-                      color="primary"
                       component={Link}
                       to={`/tours/${tour.id || 1}`}
                       size="small"
                       sx={{
                         minWidth: "100px",
                         fontWeight: "bold",
+                        color: "white",
                       }}
                     >
                       Đặt Ngay

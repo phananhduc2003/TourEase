@@ -52,6 +52,7 @@ function TourDetail() {
 
   const handleOrderDetailTour = () => {
     navigate(`/order-detail-tour/${tourId}`);
+    window.scrollTo(0, 0);
   };
 
   return (

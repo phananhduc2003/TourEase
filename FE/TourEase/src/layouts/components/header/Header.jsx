@@ -52,7 +52,7 @@ function Header() {
       if (item.path === "/") {
         return location.pathname === "/";
       }
-      // Nếu pathname bắt đầu bằng path hoặc nằm trong extraPaths thì active
+
       if (location.pathname.startsWith(item.path)) return true;
       if (item.extraPaths?.some((p) => location.pathname.startsWith(p)))
         return true;
