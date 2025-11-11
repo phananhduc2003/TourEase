@@ -423,7 +423,7 @@ function IntroductionPage() {
                           <EmojiEventsIcon
                             sx={{
                               color: "#E4E4E4",
-                              fontSize: "2.2rem",
+                              fontSize: "2rem",
                               position: "absolute",
                               top: 0,
                             }}
@@ -433,7 +433,7 @@ function IntroductionPage() {
                             sx={{
                               fontWeight: "bold",
                               color: "text.primary",
-                              ml: 3,
+                              ml: 5,
                             }}
                           >
                             Chúng tôi là công ty đạt giải thưởng
@@ -480,7 +480,7 @@ function IntroductionPage() {
                           <TravelExploreIcon
                             sx={{
                               color: "#E4E4E4",
-                              fontSize: "2.2rem",
+                              fontSize: "2rem",
                               position: "absolute",
                               top: 0,
                             }}
@@ -490,7 +490,7 @@ function IntroductionPage() {
                             sx={{
                               fontWeight: "bold",
                               color: "text.primary",
-                              ml: 3,
+                              ml: 5,
                             }}
                           >
                             5000+ Điểm đến du lịch phổ biến

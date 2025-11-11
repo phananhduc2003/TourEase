@@ -1,16 +1,16 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import SearchIcon from "@mui/icons-material/Search";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 
-import { useLocation, useNavigate } from "react-router-dom";
-
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import logo from "../../../assets/images/logoweb.png";
+
+import { useLocation, useNavigate } from "react-router-dom";
 import DarkMode from "../../../theme/DarkMode";
 import { useAuth } from "../../../context/AuthContext";
 

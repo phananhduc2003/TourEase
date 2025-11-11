@@ -1,14 +1,13 @@
 import { Box, Typography } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 
-function CardInForHomePage({ title, description }) {
+function CardInForHomePage({ title, description, icon: Icon }) {
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         width: "90%",
-        height: "auto",
+        minHeight: "180px",
         p: 2,
         backgroundColor: "background.paper",
         borderRadius: 2,
@@ -21,9 +20,9 @@ function CardInForHomePage({ title, description }) {
         },
       }}
     >
-      <HomeIcon sx={{ color: "primary.main", fontSize: "36px" }} />
+      {Icon && <Icon sx={{ color: "primary.main", fontSize: "36px" }} />}
       <Typography
-        variant="Subtitle 2"
+        variant="Subtitle2"
         fontWeight={"bold"}
         sx={{ mt: 2, color: "text.primary" }}
       >

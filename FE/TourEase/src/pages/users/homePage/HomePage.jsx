@@ -7,6 +7,7 @@ import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import HomeIcon from "@mui/icons-material/Home";
 
 import hero1 from "../../../assets/images/heroimages/hero1.jpg";
 import hero2 from "../../../assets/images/heroimages/hero2.jpg";
@@ -157,7 +158,6 @@ function HomePage() {
                   variant="caption"
                   sx={{
                     color: "text.second",
-
                     width: "70%",
                     mb: 2,
                   }}
@@ -501,12 +501,14 @@ function HomePage() {
                         <CardInForHomePage
                           title="Chinh Phục Cảnh Quan Việt Nam"
                           description="Khám phá những cảnh đẹp hùng vĩ và tuyệt vời của đất nước Việt Nam"
+                          icon={HomeIcon}
                         />
                       </Box>
                       <Box sx={{ mt: 3 }}>
                         <CardInForHomePage
                           title="Chinh Phục Cảnh Quan Việt Nam"
                           description="Khám phá những cảnh đẹp hùng vĩ và tuyệt vời của đất nước Việt Nam"
+                          icon={HomeIcon}
                         />
                       </Box>
                     </Box>
@@ -517,12 +519,14 @@ function HomePage() {
                         <CardInForHomePage
                           title="Chinh Phục Cảnh Quan Việt Nam"
                           description="Khám phá những cảnh đẹp hùng vĩ và tuyệt vời của đất nước Việt Nam"
+                          icon={HomeIcon}
                         />
                       </Box>
                       <Box sx={{ mt: 3 }}>
                         <CardInForHomePage
                           title="Chinh Phục Cảnh Quan Việt Nam"
                           description="Khám phá những cảnh đẹp hùng vĩ và tuyệt vời của đất nước Việt Nam"
+                          icon={HomeIcon}
                         />
                       </Box>
                     </Box>
