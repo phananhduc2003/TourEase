@@ -77,6 +77,10 @@ function Header() {
     navigate("/register");
   };
 
+  const handleNavigationProfile = () => {
+    navigate("/profile");
+  };
+
   const handleLogout = () => {
     Logout();
   };
@@ -307,6 +311,7 @@ function Header() {
                   >
                     <Grid item sx={{ position: "relative" }}>
                       <AccountCircleIcon
+                        onClick={handleNavigationProfile}
                         sx={{
                           position: "absolute",
                           left: -20,
@@ -316,6 +321,9 @@ function Header() {
 
                           cursor: "pointer",
                           color: "primary.main",
+                          "&:hover": {
+                            transform: "scale(1.2)",
+                          },
                         }}
                       />
                     </Grid>

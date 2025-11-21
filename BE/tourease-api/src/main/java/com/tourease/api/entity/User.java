@@ -34,6 +34,9 @@ public class User {
 
     @Column(name = "address")
     private String address;
+    
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "ip_address")
     private String ipAddress;

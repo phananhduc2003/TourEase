@@ -9,6 +9,8 @@ const routes = {
   bookingPage: "/booking-page",
   login: "/login",
   register: "/register",
+  profile: "/profile",
+  inforToured: "/infor-toured",
 
   homeAdmin: "/homeadmin",
 };
