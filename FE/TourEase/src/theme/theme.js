@@ -34,6 +34,9 @@ const theme = extendTheme({
           dark: "#1976d2", // Màu xanh nước biển đậm
           contrastText: "#ffffff", // Chữ trắng
         },
+        sidebar: {
+          menu: "#FFEFD7",
+        },
       },
     },
     dark: {
@@ -60,6 +63,9 @@ const theme = extendTheme({
           main: "#B0B0B0 ",
           dark: "#B0B0B0",
           contrastText: "#ffffff",
+        },
+        sidebar: {
+          menu: "#B0B0B0",
         },
       },
     },
