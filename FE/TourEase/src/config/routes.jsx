@@ -6,11 +6,10 @@ const routes = {
   destinationPage: "/destinations",
   contactPage: "/contact",
   orderDetailTour: "/order-detail-tour/:tourId",
-  bookingPage: "/booking-page",
   login: "/login",
   register: "/register",
   profile: "/profile",
-  inforToured: "/infor-toured",
+  inforBooking: "/infor-booking",
 
   homeAdmin: "/homeadmin",
 };

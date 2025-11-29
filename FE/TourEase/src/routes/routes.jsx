@@ -4,7 +4,6 @@ import AuthLayout from "../layouts/AuthLayout/AuthLayout";
 import HomeAdmin from "../pages/admin/homeAdmin/HomeAdmin";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/register/Register";
-import BookingPage from "../pages/users/bookingPage/BookingPage";
 import ContactPage from "../pages/users/contactPage/ContactPage";
 import DestinationPage from "../pages/users/destinationPage/DestinationPage";
 
@@ -14,7 +13,7 @@ import OrderDetailTour from "../pages/users/orderDetailTour/OrderDetailTour";
 import TourDetail from "../pages/users/tourDetail/TourDetail";
 import TourPage from "../pages/users/tourPage/TourPage";
 import InforUser from "../pages/users/profileUser/ProfileUser";
-import InforToured from "../pages/users/inforToured/InforToured";
+import InforBooking from "../pages/users/inforBooking/InforBooking";
 import inforUserLayout from "../layouts/inforUserLayout/inforUserLayout";
 
 const defaultRoutes = [
@@ -29,7 +28,6 @@ const defaultRoutes = [
     component: OrderDetailTour,
     protected: true,
   },
-  { path: config.routes.bookingPage, component: BookingPage },
 
   { path: config.routes.login, component: Login, layout: AuthLayout },
   { path: config.routes.register, component: Register, layout: AuthLayout },
@@ -40,8 +38,8 @@ const defaultRoutes = [
     layout: inforUserLayout,
   },
   {
-    path: config.routes.inforToured,
-    component: InforToured,
+    path: config.routes.inforBooking,
+    component: InforBooking,
     layout: inforUserLayout,
     // protected: true,
   },

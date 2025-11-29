@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "bookings")
 @Data
@@ -18,10 +20,12 @@ public class Booking {
     private Integer bookingID;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -53,8 +57,10 @@ public class Booking {
 
     // Quan hệ khác (nếu cần)
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Invoice invoice;
-
+    
+    @JsonIgnore
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
     private Checkout checkout;
 

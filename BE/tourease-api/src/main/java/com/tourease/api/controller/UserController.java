@@ -15,7 +15,7 @@ import com.tourease.api.entity.User;
 import com.tourease.api.service.UserService;
 
 @RestController
-@RequestMapping("/api/public/user")
+@RequestMapping("/api/auth/user")
 public class UserController {
 	@Autowired
 	private UserService userService;
