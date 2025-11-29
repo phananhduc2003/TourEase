@@ -17,7 +17,7 @@ function Sidebar() {
       >
         <Menu>
           <MenuItem title="Profile" to="/profile" />
-          <MenuItem title="Toured" to="/infor-toured" />
+          <MenuItem title="Booking" to="/infor-booking" />
         </Menu>
       </Box>
     </>

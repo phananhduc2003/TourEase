@@ -1,7 +1,9 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ApiGetInforProfileUser } from "../../../api/user/ApiGetInforProfileUser";
+
 import { ApiUpdateProfileUser } from "../../../api/user/ApiUpdateProfileUser";
+
 import { useAuth } from "../../../context/AuthContext";
 
 function ProfileUser() {
@@ -43,6 +45,7 @@ function ProfileUser() {
         console.error("Error updating profile user data:", error);
       });
   };
+  console.log("Render ProfileUser component ", updateProfileUser);
   return (
     <>
       <Box sx={{ width: "100%" }}>

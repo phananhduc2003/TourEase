@@ -1,6 +1,6 @@
 import { Box, Typography, Grid, Button } from "@mui/material";
 
-function InforToured() {
+function InforBooking() {
   return (
     <Box
       sx={{ width: "100%", display: "flex", justifyContent: "center", mt: 2 }}
@@ -128,4 +128,4 @@ function InforToured() {
   );
 }
 
-export default InforToured;
+export default InforBooking;
