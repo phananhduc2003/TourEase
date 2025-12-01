@@ -9,7 +9,7 @@ const routes = {
   login: "/login",
   register: "/register",
   profile: "/profile",
-  inforBooking: "/infor-booking",
+  inforBooking: "/infor-booking/:tourId",
 
   homeAdmin: "/homeadmin",
 };
