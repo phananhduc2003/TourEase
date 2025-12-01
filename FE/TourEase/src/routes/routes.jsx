@@ -42,6 +42,7 @@ const defaultRoutes = [
     path: config.routes.inforBooking,
     component: InforBooking,
     layout: inforUserLayout,
+    protected: true,
   },
 ];
 

@@ -16,21 +16,21 @@ function AuthProvider({ children }) {
     const tokenFromUrl = urlParams.get("token");
 
     if (tokenFromUrl) {
-      sessionStorage.setItem("token", tokenFromUrl);
+      localStorage.setItem("token", tokenFromUrl);
 
       // Optionally clean URL
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
     }
 
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         // Kiểm tra thời gian hết hạn (exp) nếu có
         const currentTime = Math.floor(Date.now() / 1000);
         if (payload.exp && payload.exp < currentTime) {
-          sessionStorage.removeItem("token");
+          localStorage.removeItem("token");
           setAuthenticated(false);
           setUserRole(null);
           setIdUser(null);
@@ -42,7 +42,7 @@ function AuthProvider({ children }) {
         }
       } catch (e) {
         console.error("Invalid token:", e);
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
         setAuthenticated(false);
         setUserRole(null);
         setIdUser(null);
@@ -60,7 +60,7 @@ function AuthProvider({ children }) {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const role = payload.role === "ADMIN" ? 1 : 0;
 
-      sessionStorage.setItem("token", token);
+      localStorage.setItem("token", token);
       setAuthenticated(true);
       setUserRole(role);
       setIdUser(payload.userId);
