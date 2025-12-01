@@ -1,8 +1,13 @@
 import { Box } from "@mui/material";
 import Menu from "./Menu";
 import MenuItem from "./MenuItem";
+import { useAuth } from "../../../context/AuthContext";
 
 function Sidebar() {
+  const useContext = useAuth();
+
+  const userId = useContext.idUser;
+
   return (
     <>
       <Box
@@ -17,7 +22,7 @@ function Sidebar() {
       >
         <Menu>
           <MenuItem title="Profile" to="/profile" />
-          <MenuItem title="Booking" to="/infor-booking" />
+          <MenuItem title="Booking" to={`/infor-booking/${userId}`} />
         </Menu>
       </Box>
     </>

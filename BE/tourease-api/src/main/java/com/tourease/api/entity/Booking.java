@@ -20,7 +20,6 @@ public class Booking {
     private Integer bookingID;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
     

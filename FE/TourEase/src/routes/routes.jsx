@@ -36,12 +36,12 @@ const defaultRoutes = [
     path: config.routes.profile,
     component: InforUser,
     layout: inforUserLayout,
+    protected: true,
   },
   {
     path: config.routes.inforBooking,
     component: InforBooking,
     layout: inforUserLayout,
-    // protected: true,
   },
 ];
 
@@ -50,7 +50,6 @@ const adminRoutes = [
     path: config.routes.homeAdmin,
     component: HomeAdmin,
     layout: AdminLayout,
-    protected: true,
   },
 ];
 

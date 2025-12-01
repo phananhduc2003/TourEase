@@ -79,6 +79,7 @@ function Header() {
 
   const handleNavigationProfile = () => {
     navigate("/profile");
+    window.scrollTo(0, 0);
   };
 
   const handleLogout = () => {
