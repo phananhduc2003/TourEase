@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tourease.api.DTO.CheckoutRequest;
+import com.tourease.api.DTO.CheckoutResultDTO;
 import com.tourease.api.Enum.PaymentStatus;
 import com.tourease.api.entity.Booking;
 import com.tourease.api.entity.Checkout;
+import com.tourease.api.exception.ResourceNotFoundException;
 import com.tourease.api.service.CheckoutService;
 import com.tourease.api.service.VNPayService;
 
@@ -33,53 +35,76 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*")
-public class CheckoutControler {
+public class CheckoutController {
 	private final CheckoutService checkoutService;
     private final VNPayService vnPayService;
     
     @PostMapping
     public ResponseEntity<?> createCheckout(@Valid @RequestBody CheckoutRequest request) {
-        log.info("Nhận request checkout cho tour: {}, user: {}, amount adults: {}, children: {}", 
-                request.getTourId(), request.getUserId(), request.getNumAdults(), request.getNumChildren());
+        log.info("Nhận request checkout cho tour: {}, user: {}", 
+                request.getTourId(), request.getUserId());
 
-        Integer userId = request.getUserId();
+        try {
+            
+            CheckoutResultDTO result = checkoutService.processCompleteCheckout(
+                request, 
+                request.getUserId()
+            );
 
-        // Bước 1: Tạo booking
-        Booking booking = checkoutService.createBookingFromCheckout(request, userId);
+         
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("bookingId", result.getBooking().getBookingID());
+            response.put("checkoutId", result.getCheckout().getCheckoutID());
+            response.put("transactionId", result.getCheckout().getTransactionID());
+            response.put("amount", result.getCheckout().getAmount());
+            response.put("paymentMethod", result.getCheckout().getPaymentMethod().getDisplayName());
 
-        // Bước 2: Tạo checkout
-        Checkout checkout = checkoutService.createCheckout(booking, request);
+          
+            switch (result.getCheckout().getPaymentMethod()) {
+                case OFFICE_PAYMENT:
+                    response.put("paymentStatus", "PENDING");
+                    response.put("message", result.getPaymentResult());
+                    break;
+                case VNPAY:
+                    response.put("paymentStatus", "REDIRECT");
+                    response.put("redirectUrl", result.getPaymentResult());
+                    response.put("message", "Chuyển hướng đến VNPay để thanh toán");
+                    break;
+            }
 
-        // Bước 3: Xử lý thanh toán theo phương thức
-        String paymentResult = checkoutService.processPayment(checkout);
+            log.info("Checkout thành công - BookingID: {}, Amount: {}", 
+                    result.getBooking().getBookingID(), result.getCheckout().getAmount());
 
-        // Tạo response
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "Checkout thành công");
-        response.put("bookingId", booking.getBookingID());
-        response.put("checkoutId", checkout.getCheckoutID());
-        response.put("transactionId", checkout.getTransactionID());
-        response.put("amount", checkout.getAmount());
-        response.put("paymentMethod", checkout.getPaymentMethod().getDisplayName());
-
-        // Xử lý response theo từng phương thức thanh toán
-        switch (checkout.getPaymentMethod()) {
-            case OFFICE_PAYMENT:
-                response.put("paymentStatus", "PENDING");
-                response.put("message", paymentResult);
-                break;
-            case VNPAY:
-                response.put("paymentStatus", "REDIRECT");
-                response.put("redirectUrl", paymentResult);
-                response.put("message", "Chuyển hướng đến VNPay để thanh toán");
-                break;
+            return ResponseEntity.ok(response);
+            
+        } catch (IllegalArgumentException e) {
+            // Validation error
+            log.error("Validation error: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "error", "VALIDATION_ERROR",
+                "message", e.getMessage()
+            ));
+            
+        } catch (ResourceNotFoundException e) {
+            // Resource not found
+            log.error("Resource not found: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "success", false,
+                "error", "NOT_FOUND",
+                "message", e.getMessage()
+            ));
+            
+        } catch (Exception e) {
+            // Unknown error
+            log.error("Lỗi không xác định khi checkout: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "success", false,
+                "error", "INTERNAL_ERROR",
+                "message", "Đã xảy ra lỗi khi xử lý đơn hàng. Vui lòng thử lại sau."
+            ));
         }
-
-        log.info("Checkout thành công - BookingID: {}, CheckoutID: {}, Amount: {}", 
-                booking.getBookingID(), checkout.getCheckoutID(), checkout.getAmount());
-
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -120,12 +145,15 @@ public class CheckoutControler {
             String transactionId = allParams.get("vnp_TxnRef");
             String responseCode = allParams.get("vnp_ResponseCode");
             
+            String userId = transactionId.split("-")[0];
+
+            
             String redirectMessage;
             
             if (!isValidSignature) {
                 redirectMessage = "Chữ ký không hợp lệ";
             } else if ("00".equals(responseCode)) {
-                // 3. Update payment status khi thành công
+              
                 checkoutService.updatePaymentStatusByTransactionId(
                     transactionId, 
                     PaymentStatus.SUCCESS, 
@@ -133,7 +161,7 @@ public class CheckoutControler {
                 );
                 redirectMessage = "Thanh toán thành công";
             } else {
-                // 4. Update payment status khi thất bại
+               
                 checkoutService.updatePaymentStatusByTransactionId(
                     transactionId, 
                     PaymentStatus.FAILED, 
@@ -142,8 +170,8 @@ public class CheckoutControler {
                 redirectMessage = "Thanh toán thất bại";
             }
             
-            // 5. Redirect về frontend theo pattern cũ
-            String baseRedirect = "http://localhost:5173"; 
+          
+            String baseRedirect = "http://localhost:5173/infor-booking/" + userId;
             String encodedMessage = URLEncoder.encode(redirectMessage, StandardCharsets.UTF_8);
             String finalRedirectUrl = baseRedirect + "?message=" + encodedMessage + 
                                     "&transactionId=" + transactionId +
@@ -155,7 +183,7 @@ public class CheckoutControler {
         } catch (Exception e) {
             log.error("Lỗi xử lý VNPay return: ", e);
             
-            // Redirect về error page
+           
             String errorRedirect = "http://localhost:5173/payment-result?message=" + 
                                  URLEncoder.encode("Lỗi xử lý kết quả thanh toán", StandardCharsets.UTF_8) +
                                  "&success=false";
@@ -171,18 +199,18 @@ public class CheckoutControler {
         log.info("Nhận VNPay IPN cho transaction: {}", vnpParams.get("vnp_TxnRef"));
 
         try {
-            // 1. Verify signature
+          
             boolean isValidSignature = vnPayService.verifyPaymentResponse(vnpParams);
             if (!isValidSignature) {
                 return ResponseEntity.ok(Map.of("RspCode", "97", "Message", "Invalid signature"));
             }
 
-            // 2. Check payment success
+           
             boolean isPaymentSuccess = vnPayService.isPaymentSuccess(vnpParams);
             String transactionId = vnpParams.get("vnp_TxnRef");
             Map<String, String> paymentDetails = vnPayService.parseVNPayResponse(vnpParams);
 
-            // 3. Update payment status
+         
             checkoutService.updatePaymentStatusByTransactionId(
                 transactionId, 
                 isPaymentSuccess ? PaymentStatus.SUCCESS : PaymentStatus.FAILED, 
@@ -191,7 +219,7 @@ public class CheckoutControler {
 
             log.info("VNPay IPN processed - Transaction: {}, Success: {}", transactionId, isPaymentSuccess);
 
-            // VNPay yêu cầu response theo format này
+          
             return ResponseEntity.ok(Map.of("RspCode", "00", "Message", "Confirm Success"));
 
         } catch (Exception e) {

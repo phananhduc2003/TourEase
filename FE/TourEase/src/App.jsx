@@ -68,7 +68,6 @@ const AnimatedRoutes = () => {
   const location = useLocation();
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // ✅ Xử lý loading khi chuyển trang
   useEffect(() => {
     setIsNavigating(true);
 
@@ -81,7 +80,6 @@ const AnimatedRoutes = () => {
 
   return (
     <>
-      {/* ✅ Global loading overlay khi navigate */}
       {isNavigating && <LoadingScreen />}
 
       <Routes location={location}>
