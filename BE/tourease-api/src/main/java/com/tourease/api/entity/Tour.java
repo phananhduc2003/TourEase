@@ -29,6 +29,9 @@ public class Tour {
     @Column(name = "image_url")
     private List<String> images;
     
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TourStartDate> startDates;
+    
     private Integer quantity;
     private Double priceAdult;
     private Double priceChild;
@@ -37,6 +40,12 @@ public class Tour {
     private Boolean availability;
     private LocalDate startDate;
     private LocalDate endDate;
+    
+    @Column(name = "departure_location")
+    private String departureLocation;  
+    
+    @Column(name = "transportation")
+    private String transportation; 
     
     // Relationships
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
