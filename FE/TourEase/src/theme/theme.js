@@ -18,7 +18,7 @@ const theme = extendTheme({
         },
         text: {
           primary: "#0F1214", // Chữ chính màu đen
-          secondary: "#6C7C93", // Chữ phụ màu đen xám
+          secondary: "#4B5A73", // Chữ phụ màu đen xám
           second: "#E4E4E4",
           // Chữ đen
         },

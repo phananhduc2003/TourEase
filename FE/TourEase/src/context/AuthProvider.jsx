@@ -59,7 +59,6 @@ function AuthProvider({ children }) {
       const token = response.data.token;
       const payload = JSON.parse(atob(token.split(".")[1]));
       const role = payload.role === "ADMIN" ? 1 : 0;
-
       localStorage.setItem("token", token);
       setAuthenticated(true);
       setUserRole(role);
@@ -100,7 +99,7 @@ function AuthProvider({ children }) {
     setAuthenticated(false);
     setUserRole(null);
     setIdUser(null);
-    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
   };
 
   return (

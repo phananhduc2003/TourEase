@@ -6,6 +6,8 @@ import { ApiFilterTour } from "../../../api/user/ApiFilterTour";
 import { ApiGetDestinations } from "../../../api/user/ApiGetDestinations";
 import TourList from "../../../components/TourListTourPage/TourList";
 import FilterPanel from "../../../components/FilterPanelTourPage/FilterPanel";
+import { ApiGetDepartureLocations } from "../../../api/user/ApiGetdepartureLocations";
+import { ApiGetTransportations } from "../../../api/user/ApiGetTransportations";
 
 function TourPage() {
   const navigate = useNavigate();
@@ -17,24 +19,35 @@ function TourPage() {
   const [pagination, setPagination] = useState({});
   const [destinations, setDestinations] = useState([]);
   const [selectedDestinations, setSelectedDestinations] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 10]);
+  const [departureLocations, setDepartureLocations] = useState([]);
+  const [selectedDepartureLocations, setSelectedDepartureLocations] = useState(
+    []
+  );
+  const [transportations, setTransportations] = useState([]);
+  const [selectedTransportations, setSelectedTransportations] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 15]);
 
   const [filters, setFilters] = useState({
     page: 0,
     size: 9,
     destinations: [],
+    departureLocations: [],
+    transportations: [],
     minPrice: "",
     maxPrice: "",
     sortBy: "tourID",
-    sortDir: "desc",
+    sortDir: "asc",
   });
 
   useEffect(() => {
     loadTours();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   useEffect(() => {
     getDestinations();
+    getDepartureLocations();
+    getTransportations();
   }, []);
 
   const loadTours = async () => {
@@ -55,7 +68,7 @@ function TourPage() {
 
       // Tính thời gian API call
       const elapsed = Date.now() - startTime;
-      const remaining = 500 - elapsed; // 1000ms = 1s
+      const remaining = 500 - elapsed;
 
       if (remaining > 0) {
         setTimeout(() => setLoading(false), remaining);
@@ -78,6 +91,22 @@ function TourPage() {
     }
   };
 
+  const getDepartureLocations = async () => {
+    try {
+      const response = await ApiGetDepartureLocations();
+      setDepartureLocations(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const getTransportations = async () => {
+    try {
+      const response = await ApiGetTransportations();
+      setTransportations(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleFilterChange = (newFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters, page: 0 }));
   };
@@ -106,6 +135,36 @@ function TourPage() {
     handleFilterChange({ destinations: newSelected });
   };
 
+  const handleDepartureLocationChange = (location, clearAll = false) => {
+    if (clearAll) {
+      setSelectedDepartureLocations([]);
+      handleFilterChange({ departureLocations: [] });
+      return;
+    }
+
+    const newSelected = selectedDepartureLocations.includes(location)
+      ? selectedDepartureLocations.filter((l) => l !== location)
+      : [...selectedDepartureLocations, location];
+
+    setSelectedDepartureLocations(newSelected);
+    handleFilterChange({ departureLocations: newSelected });
+  };
+
+  const handleTransportationChange = (transport, clearAll = false) => {
+    if (clearAll) {
+      setSelectedTransportations([]);
+      handleFilterChange({ transportations: [] });
+      return;
+    }
+
+    const newSelected = selectedTransportations.includes(transport)
+      ? selectedTransportations.filter((t) => t !== transport)
+      : [...selectedTransportations, transport];
+
+    setSelectedTransportations(newSelected);
+    handleFilterChange({ transportations: newSelected });
+  };
+
   const handlePageChange = (e, newPage) => {
     setFilters((prev) => ({ ...prev, page: newPage - 1 }));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -113,33 +172,45 @@ function TourPage() {
 
   const handleSortChange = (value) => {
     setSortOption(value);
-    if (value === "priceAsc") {
-      handleFilterChange({ sortBy: "priceAdult", sortDir: "asc" });
-    } else if (value === "priceDesc") {
-      handleFilterChange({ sortBy: "priceAdult", sortDir: "desc" });
-    } else if (value === "newest") {
-      handleFilterChange({ sortBy: "tourID", sortDir: "desc" });
-    } else {
-      handleFilterChange({ sortBy: "tourID", sortDir: "desc" });
+
+    switch (value) {
+      case "priceAsc":
+        handleFilterChange({ sortBy: "priceAdult", sortDir: "asc" });
+        break;
+      case "priceDesc":
+        handleFilterChange({ sortBy: "priceAdult", sortDir: "desc" });
+        break;
+      case "newest":
+        handleFilterChange({ sortBy: "tourID", sortDir: "desc" });
+        break;
+      default:
+        handleFilterChange({ sortBy: "tourID", sortDir: "asc" });
+        break;
     }
   };
 
   const handleClearFilters = () => {
     setSelectedDestinations([]);
-    setPriceRange([0, 10]);
+    setSelectedDepartureLocations([]);
+    setSelectedTransportations([]);
+    setPriceRange([0, 15]);
+    setSortOption("");
     setFilters({
       page: 0,
       size: 9,
       destinations: [],
+      departureLocations: [],
+      transportations: [],
       minPrice: "",
       maxPrice: "",
       sortBy: "tourID",
-      sortDir: "desc",
+      sortDir: "asc",
     });
   };
 
   const handleTourClick = (tourID) => {
     navigate(`/tour-detail/${tourID}`);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -160,7 +231,13 @@ function TourPage() {
               onPriceCommit={handlePriceCommit}
               destinations={destinations}
               selectedDestinations={selectedDestinations}
+              departureLocations={departureLocations}
+              selectedDepartureLocations={selectedDepartureLocations}
+              transportations={transportations}
+              selectedTransportations={selectedTransportations}
               onDestinationChange={handleDestinationChange}
+              onDepartureLocationChange={handleDepartureLocationChange}
+              onTransportationChange={handleTransportationChange}
               onClearFilters={handleClearFilters}
             />
           </Grid>

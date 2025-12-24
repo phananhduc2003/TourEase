@@ -46,18 +46,26 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
      */
 	@Query("SELECT t FROM Tour t WHERE t.availability = true " +
 		       "AND (:destinations IS NULL OR t.destination IN :destinations) " +
+		       "AND (:departureLocations IS NULL OR t.departureLocation IN :departureLocations) " +
+		       "AND (:transportations IS NULL OR t.transportation IN :transportations) " +
 		       "AND (:minPrice IS NULL OR t.priceAdult >= :minPrice) " +
 		       "AND (:maxPrice IS NULL OR t.priceAdult <= :maxPrice)")
 	    Page<Tour> findToursWithFilters(
 	        @Param("destinations") List<String> destinations,
+	        @Param("departureLocations") List<String> departureLocations,
+	        @Param("transportations") List<String> transportations,
 	        @Param("minPrice") Double minPrice, 
 	        @Param("maxPrice") Double maxPrice,
 	        Pageable pageable
 	    );
     
-    /**
-     * Lấy danh sách các destination có sẵn (để tạo options cho filter)
-     */
+   
     @Query("SELECT DISTINCT t.destination FROM Tour t WHERE t.availability = true AND t.destination IS NOT NULL")
     List<String> findDistinctDestinations();
+    
+    @Query("SELECT DISTINCT t.departureLocation FROM Tour t WHERE t.availability = true AND t.departureLocation IS NOT NULL")
+    List<String> findDistinctDepartureLocations();
+    
+    @Query("SELECT DISTINCT t.transportation FROM Tour t WHERE t.availability = true AND t.transportation IS NOT NULL")
+    List<String> findDistinctTransportations();
 }

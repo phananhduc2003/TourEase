@@ -32,6 +32,7 @@ public class Tour {
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TourStartDate> startDates;
     
+    private String tourCode;
     private Integer quantity;
     private Double priceAdult;
     private Double priceChild;
@@ -94,8 +95,5 @@ public class Tour {
     public String getTourName() {
         return this.title;
     }
-
-
-
     
 }

@@ -55,43 +55,64 @@ function HomePage() {
     <>
       <Box sx={wrapper}>
         {/* hero image */}
-        <Box
-          sx={{
-            m: 3,
-            borderRadius: 1,
-            boxShadow: 3,
-          }}
-        >
-          <Swiper
-            modules={[Pagination, Autoplay]}
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 3000 }}
-            loop={true}
-            style={{ width: "100%", height: "100vh", overflow: "hidden" }}
+        <Box sx={wrapper}>
+          {/* hero image */}
+          <Box
+            sx={{
+              m: 3,
+              borderRadius: 1,
+              boxShadow: 3,
+              position: "relative", // Đặt relative để chứa các thành phần con tuyệt đối
+            }}
           >
-            {heroImages.map((image, index) => (
-              <SwiperSlide key={index}>
-                <Box
-                  style={{
-                    height: "100vh",
-                    width: "100%",
-                    backgroundImage: `url(${image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                ></Box>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+            {/* Dòng chữ "Tour Ease" */}
+            <Typography
+              sx={{
+                position: "absolute",
+                top: "15%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "primary.main",
+                fontSize: "clamp(2rem, 8vw, 10rem)",
+                fontWeight: "bold",
+                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
+                zIndex: 10,
+              }}
+            >
+              Tour Ease
+            </Typography>
+
+            <Swiper
+              modules={[Pagination, Autoplay]}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 3000 }}
+              loop={true}
+              style={{ width: "100%", height: "100vh", overflow: "hidden" }}
+            >
+              {heroImages.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <Box
+                    style={{
+                      height: "100vh",
+                      width: "100%",
+                      backgroundImage: `url(${image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  ></Box>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
         </Box>
         {/* welcome message */}
-        <Box sx={{ textAlign: "center", mt: 4, mb: 4 }}>
+        <Box sx={{ textAlign: "center", mt: 6, mb: 4 }}>
           <Typography
-            variant="h4"
             sx={{
               textAlign: "center",
               color: "text.primary",
               fontWeight: "bold",
+              fontSize: "3.5rem",
             }}
           >
             Khám Phá Kho Báu Việt Nam Cùng TourEase
@@ -101,7 +122,7 @@ function HomePage() {
               textAlign: "center",
               color: "text.primary",
               marginTop: 1,
-              fontSize: "1rem",
+              fontSize: "1.3rem",
             }}
           >
             Website đặt tour du lịch trực tuyến hàng đầu tại Việt Nam
@@ -160,6 +181,7 @@ function HomePage() {
                     color: "text.second",
                     width: "70%",
                     mb: 2,
+                    fontSize: "0.8rem",
                   }}
                 >
                   Chúng tôi sẽ nỗ lực hết mình để biến giấc mơ du lịch của bạn
@@ -296,18 +318,18 @@ function HomePage() {
         {/* tour popular */}
         <Box
           sx={{
-            mt: 6,
+            mt: 8,
             mb: 6,
             textAlign: "center",
             backgroundColor: "background.default",
           }}
         >
           <Typography
-            variant="h4"
             sx={{
               color: "text.primary",
               fontWeight: "bold",
               mb: 1,
+              fontSize: "3.5rem",
             }}
           >
             Khám Phá Các Điểm Đến Phổ Biến
@@ -319,7 +341,7 @@ function HomePage() {
               borderRadius: 10,
               backgroundColor: "background.default",
               color: "text.primary",
-              fontSize: "1rem",
+              fontSize: "1.3rem",
             }}
           >
             Website{" "}

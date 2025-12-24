@@ -1,5 +1,7 @@
 package com.tourease.api.DTO;
 
+import java.time.LocalDate;
+
 import com.tourease.api.Enum.PaymentMethod;
 
 import jakarta.validation.constraints.AssertTrue;
@@ -19,12 +21,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CheckoutRequest {
+	
+	
 
 	@NotNull(message = "Tour ID không được để trống")
     private Integer tourId;
     
     @NotNull(message = "User ID không được để trống")
     private Integer userId;
+    
+//	@NotNull(message = "StartDate không được để trống")
+    private LocalDate startDates;
+	
+//	@NotNull(message = "departureLocation không được để trống")
+    private String departureLocation;
+	
+//	@NotNull(message = "transportation không được để trống")
+    private String transportation;
+    
+//    @NotNull(message = "tourCode ID không được để trống")
+    private String tourCode;
     
     // Thông tin liên lạc
     @NotBlank(message = "Họ và tên không được để trống")

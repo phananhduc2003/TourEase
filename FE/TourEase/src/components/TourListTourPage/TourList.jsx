@@ -12,6 +12,11 @@ import {
   Typography,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import QrCode2Icon from "@mui/icons-material/QrCode2";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 function TourList({
   tours,
@@ -82,8 +87,8 @@ function TourList({
           mb: 3,
         }}
       >
-        <Typography sx={{ mt: 3 }}>
-          Tours Tìm Thấy {pagination.totalElements}
+        <Typography sx={{ mt: 3, fontWeight: "bold", fontSize: "1.2rem" }}>
+          Tìm thấy {pagination.totalElements} tour cho quý khách.
         </Typography>
         <Box sx={{ mt: 3 }}>
           <FormControl fullWidth size="small">
@@ -113,120 +118,283 @@ function TourList({
 
       {/* Danh sách tour */}
       <Box sx={{ pb: 3 }}>
-        <Grid container spacing={2} sx={{ justifyContent: "center", px: 2 }}>
+        <Grid container spacing={3} sx={{ justifyContent: "center", px: 2 }}>
           {tours.map((tour) => (
-            <Grid item xs={12} sm={6} md={4} key={tour.tourID}>
+            <Grid item xs={12} key={tour.tourID}>
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
+                  minHeight: 280,
                   borderRadius: 1,
                   p: 1,
                   boxShadow: 3,
                   height: "100%",
                   width: "100%",
                   backgroundColor: "background.paper",
+                  overflow: "hidden",
                 }}
               >
-                <Box
-                  onClick={() => onTourDetailClick(tour.tourID)}
-                  sx={{
-                    aspectRatio: "4/3",
-                    width: "100%",
-                    backgroundImage: `url(${tour.images[0]})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    cursor: "pointer",
-                    borderRadius: 1,
-                    transition: "transform 0.3s ease",
-                    "&:hover": {
-                      transform: "scale(1.03)", // hiệu ứng khi hover
-                    },
-                  }}
-                />
-                <Box
-                  sx={{
-                    mt: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    mx: 2,
-                  }}
-                >
-                  <Typography variant="caption" sx={{ mt: 2 }}>
-                    <LocationOnIcon
-                      sx={{ verticalAlign: "middle", fontSize: "small" }}
-                    />
-                    {tour.destination}
-                  </Typography>
-                  <Box
-                    sx={{
-                      minHeight: { xs: "3.5rem", sm: "4rem" },
-                      display: "flex",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Typography
+                <Grid container>
+                  <Grid item xs={12} sm={12} md={4}>
+                    <Box
                       onClick={() => onTourDetailClick(tour.tourID)}
-                      variant="h6"
                       sx={{
-                        fontWeight: "bold",
-                        lineHeight: 1.2,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
+                        minHeight: 280,
+                        flexShrink: 0,
+                        backgroundImage: `url(${tour.images[0]})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                         cursor: "pointer",
+                        borderRadius: 1,
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "scale(1.03)", // hiệu ứng khi hover
+                        },
                       }}
-                    >
-                      {tour.title}
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    {tour.duration}
-                  </Typography>
-                </Box>
-                <Divider sx={{ my: 4 }} />
-                <Box sx={{ display: "flex", mx: 2, mt: 2, mb: 1 }}>
-                  <Grid container sx={{ width: "100%" }}>
-                    <Grid item xs={6}>
-                      <Typography variant="h6" fontWeight="bold">
-                        {formatPrice(tour.priceAdult)}
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: "0.5rem" }}
-                        >
-                          VND
-                        </Typography>
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      item
-                      xs={6}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={8}>
+                    <Box
                       sx={{
                         display: "flex",
-                        justifyContent: "flex-end",
-                        position: "relative",
+                        flexDirection: "column",
+                        mx: 2,
                       }}
                     >
-                      <Button
-                        variant="contained"
+                      <Typography variant="caption" sx={{ mt: 2 }}>
+                        <LocationOnIcon
+                          sx={{ verticalAlign: "middle", fontSize: "small" }}
+                        />
+                        {tour.destination}
+                      </Typography>
+                      <Box
                         sx={{
-                          width: "110px",
-                          height: "40px",
-                          position: "absolute",
-                          right: 0,
-                          top: -4,
-                          color: "white",
+                          display: "flex",
+                          alignItems: "flex-start",
                         }}
                       >
-                        Đặt Ngay
-                      </Button>
-                    </Grid>
+                        <Typography
+                          onClick={() => onTourDetailClick(tour.tourID)}
+                          sx={{
+                            fontWeight: "bold",
+                            fontSize: "1.6rem",
+                            lineHeight: 1.2,
+                            display: "-webkit-box",
+                            WebkitLineClamp: 1,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            cursor: "pointer",
+                            mt: 1,
+                          }}
+                        >
+                          {tour.title}
+                        </Typography>
+                      </Box>
+
+                      <Box
+                        onClick={() => onTourDetailClick(tour.tourID)}
+                        sx={{ mt: 3, cursor: "pointer" }}
+                      >
+                        <Grid container spacing={1}>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "1rem",
+                                gap: 1,
+                              }}
+                            >
+                              <QrCode2Icon sx={{ mr: 0.5 }} />
+                              Mã tour:&nbsp;
+                              <Typography sx={{ fontWeight: 500 }}>
+                                {tour.tourCode}
+                              </Typography>
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "1rem",
+
+                                gap: 1,
+                              }}
+                            >
+                              <MyLocationIcon sx={{ mr: 0.5 }} />
+                              Khởi hành:&nbsp;
+                              <Typography
+                                sx={{
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {tour.departureLocation}
+                              </Typography>
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "1rem",
+                                gap: 1,
+                              }}
+                            >
+                              <AccessTimeIcon sx={{ mr: 0.5 }} />
+                              Thời gian:&nbsp;
+                              <Typography sx={{ fontWeight: 500 }}>
+                                {tour.duration}
+                              </Typography>
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "1rem",
+                                gap: 1,
+                              }}
+                            >
+                              <FlightTakeoffIcon sx={{ mr: 0.5 }} />
+                              Phương tiện:&nbsp;
+                              <Typography sx={{ fontWeight: 500 }}>
+                                {tour.transportation}
+                              </Typography>
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          mt: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <CalendarMonthIcon
+                          sx={{ fontSize: 20, color: "text.secondary" }}
+                        />
+
+                        <Typography
+                          sx={{
+                            fontSize: "0.95rem",
+                            fontWeight: 500,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Ngày khởi hành:
+                        </Typography>
+
+                        <Box
+                          onClick={() => onTourDetailClick(tour.tourID)}
+                          sx={{
+                            display: "flex",
+                            gap: 1,
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {tour.startDates?.map((item) => {
+                            const date = new Date(item.startDate);
+                            const day = date
+                              .getDate()
+                              .toString()
+                              .padStart(2, "0");
+                            const month = (date.getMonth() + 1)
+                              .toString()
+                              .padStart(2, "0");
+
+                            return (
+                              <Box
+                                key={item.id}
+                                sx={{
+                                  px: 1.2,
+                                  py: 0.4,
+                                  border: "1px solid ",
+                                  borderColor: "primary.main",
+                                  borderRadius: "8px",
+                                  color: "primary.main",
+                                  fontSize: "0.85rem",
+                                  fontWeight: 500,
+                                  cursor: "pointer",
+                                  transition: "all 0.2s ease",
+                                  "&:hover": {
+                                    backgroundColor: "primary.main",
+                                    color: "#fff",
+                                  },
+                                }}
+                              >
+                                {day}/{month}
+                              </Box>
+                            );
+                          })}
+                        </Box>
+                      </Box>
+
+                      <Divider sx={{ mt: 3 }} />
+
+                      <Box sx={{ mx: 2, mt: 2, mb: 1 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            flexWrap: "wrap",
+                            gap: 2,
+                          }}
+                        >
+                          {/* PRICE */}
+                          <Typography
+                            sx={{
+                              fontSize: "1.25rem",
+                              fontWeight: "bold",
+                              display: "flex",
+                              alignItems: "flex-end",
+                              gap: 0.5,
+                            }}
+                          >
+                            {formatPrice(tour.priceAdult)}
+                            <Typography
+                              component="span"
+                              sx={{
+                                fontSize: "0.7rem",
+                                color: "text.secondary",
+                                mb: 0.2,
+                              }}
+                            >
+                              VND
+                            </Typography>
+                          </Typography>
+
+                          {/* BUTTON */}
+                          <Button
+                            onClick={() => onTourDetailClick(tour.tourID)}
+                            variant="contained"
+                            sx={{
+                              px: 3,
+                              py: 1.2,
+                              fontWeight: 600,
+                              borderRadius: 1.5,
+                              whiteSpace: "nowrap",
+                              color: "white",
+                            }}
+                          >
+                            XEM CHI TIẾT
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Box>
                   </Grid>
-                </Box>
+                </Grid>
               </Box>
             </Grid>
           ))}
@@ -235,7 +403,7 @@ function TourList({
         {/* Pagination */}
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Pagination
-            sx={{ my: 2 }}
+            sx={{ my: 2, color: "#fff" }}
             color="primary"
             size="large"
             count={pagination.totalPages || 0}

@@ -77,13 +77,15 @@ public class TourController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "9") int size,
 			@RequestParam(required = false) List<String> destinations,
+			@RequestParam(required = false) List<String> departureLocations,
+			@RequestParam(required = false) List<String> transportations,
 			@RequestParam(required = false) Double minPrice,
 			@RequestParam(required = false) Double maxPrice,
 			@RequestParam(defaultValue = "tourID") String sortBy,
-			@RequestParam(defaultValue = "desc") String sortDir) {
+			@RequestParam(defaultValue = "asc") String sortDir) {
 			
 			Page<Tour> tourPage = tourService.getToursWithFilters(
-				page, size, destinations, minPrice, maxPrice, sortBy, sortDir
+				page, size, destinations,departureLocations,transportations , minPrice, maxPrice, sortBy, sortDir
 			);
 			
 			TourPageResponse response = TourPageResponse.builder()
@@ -98,7 +100,6 @@ public class TourController {
 				
 			return ResponseEntity.ok(response);
 			
-		
 	}
 	
 	/**
@@ -109,6 +110,20 @@ public class TourController {
 
 			List<String> destinations = tourService.getAvailableDestinations();
 			return ResponseEntity.ok(destinations);	
+	}
+	
+	@GetMapping("/departureLocations")
+	public ResponseEntity<List<String>> getAvailableDepartureLocations() {
+		
+		List<String> departureLocations = tourService.getAvailableDepartureLocation();
+		return ResponseEntity.ok(departureLocations);
+	}
+	
+	@GetMapping("/transportations")
+	public ResponseEntity<List<String>> getAvailableTransportation() {
+		
+		List<String> transportations = tourService.getAvailableTransportation();
+		return ResponseEntity.ok(transportations);
 	}
 	
 }
