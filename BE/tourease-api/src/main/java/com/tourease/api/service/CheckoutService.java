@@ -114,6 +114,9 @@ public class CheckoutService {
         
         Booking booking = Booking.builder()
                 .bookingDate(LocalDate.now())
+                .startDates(request.getStartDates())
+                .departureLocation(request.getDepartureLocation())
+                .transportation(request.getTransportation())
                 .numAdults(request.getNumAdults())
                 .numChildren(request.getNumChildren())
                 .paymentStatus("PENDING")

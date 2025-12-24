@@ -4,8 +4,6 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
-  Radio,
-  Rating,
   FormGroup,
   Slider,
   Typography,
@@ -18,6 +16,12 @@ function FilterPanel({
   destinations,
   selectedDestinations,
   onDestinationChange,
+  departureLocations,
+  selectedDepartureLocations,
+  onDepartureLocationChange,
+  transportations,
+  selectedTransportations,
+  onTransportationChange,
   onClearFilters,
 }) {
   const formatPrice = (value) => `${value} triệu`;
@@ -45,9 +49,8 @@ function FilterPanel({
           </Button>
         </Box>
 
-        {/* Lọc giá */}
         <Typography sx={{ fontSize: "1rem", fontWeight: "bold", mb: 1 }}>
-          Lọc theo giá
+          Ngân sách
         </Typography>
         <Slider
           getAriaLabel={() => "Price range"}
@@ -57,14 +60,14 @@ function FilterPanel({
           valueLabelDisplay="auto"
           valueLabelFormat={formatPrice}
           min={0}
-          max={10}
+          max={15}
           step={1}
         />
         <Typography sx={{ mb: 3, fontSize: "0.9rem" }}>
           {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
         </Typography>
 
-        <Divider sx={{ mb: 3 }} />
+        <Divider sx={{ mb: 2 }} />
 
         {/* Lọc điểm đến */}
         <Typography sx={{ fontSize: "1rem", fontWeight: "bold", mb: 1 }}>
@@ -83,30 +86,41 @@ function FilterPanel({
             />
           </FormGroup>
         ))}
-      </Box>
-      <Divider sx={{ mb: 3 }} />
-      <Typography sx={{ fontSize: "1rem", fontWeight: "bold", mb: 1 }}>
-        Đánh giá
-      </Typography>
-      <Box>
-        <FormGroup>
-          {[5, 4, 3, 2, 1].map((stars) => (
-            <Box
-              key={stars}
-              sx={{ display: "flex", alignItems: "center", mb: 1 }}
-            >
-              <Radio />
-              <Rating
-                value={stars}
-                readOnly
-                precision={0.5}
-                sx={{
-                  color: "#f57c00", // Màu cam như hình
-                }}
-              />
-            </Box>
-          ))}
-        </FormGroup>
+        <Divider sx={{ mb: 2 }} />
+
+        <Typography sx={{ fontSize: "1rem", fontWeight: "bold", mb: 1 }}>
+          Điểm khởi hành
+        </Typography>
+        {departureLocations.map((depar) => (
+          <FormGroup key={depar}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedDepartureLocations.includes(depar)}
+                  onChange={() => onDepartureLocationChange(depar)}
+                />
+              }
+              label={depar}
+            />
+          </FormGroup>
+        ))}
+        <Divider sx={{ mb: 2 }} />
+        <Typography sx={{ fontSize: "1rem", fontWeight: "bold", mb: 1 }}>
+          Phương tiện
+        </Typography>
+        {transportations.map((transport) => (
+          <FormGroup key={transport}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedTransportations.includes(transport)}
+                  onChange={() => onTransportationChange(transport)}
+                />
+              }
+              label={transport}
+            />
+          </FormGroup>
+        ))}
       </Box>
     </Box>
   );

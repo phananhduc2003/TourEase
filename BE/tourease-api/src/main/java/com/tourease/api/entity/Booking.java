@@ -29,6 +29,12 @@ public class Booking {
     private User user;
 
     private LocalDate bookingDate;
+    
+    private LocalDate startDates;
+    
+    private String departureLocation;
+    
+    private String transportation;
 
     private Integer numAdults;
     

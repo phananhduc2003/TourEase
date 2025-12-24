@@ -16,20 +16,32 @@ import {
   Alert,
   Slide,
 } from "@mui/material";
-import PaymentIcon from "@mui/icons-material/Payment";
-import CurrencyRubleIcon from "@mui/icons-material/CurrencyRuble";
-import GoogleIcon from "@mui/icons-material/Google";
 import { useEffect, useState } from "react";
 import { ApiTourOrderInfo } from "../../../api/user/ApiTourOrderInfo";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ApiCheckout } from "../../../api/user/ApiCheckout";
 import { useAuth } from "../../../context/AuthContext";
+
+import PaymentIcon from "@mui/icons-material/Payment";
+import CurrencyRubleIcon from "@mui/icons-material/CurrencyRuble";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import GoogleIcon from "@mui/icons-material/Google";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import QrCode2Icon from "@mui/icons-material/QrCode2";
 
 const vertical = "top";
 const horizontal = "right";
 
 function OrderDetailTour() {
   const useContext = useAuth();
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const { selectedDate } = location.state || { selectedDate: "" };
 
   const userId = useContext.idUser;
 
@@ -100,10 +112,14 @@ function OrderDetailTour() {
     }
 
     const formData = {
+      tourCode: orderInfo.tourCode,
+      startDates: selectedDate,
       contactName,
       contactEmail,
       contactPhone,
       contactAddress,
+      departureLocation: orderInfo.departureLocation,
+      transportation: orderInfo.transportation,
       numAdults,
       numChildren,
       specialRequests,
@@ -130,14 +146,15 @@ function OrderDetailTour() {
 
       // Call API checkout
       const response = await ApiCheckout(formData);
-      const responseData = response.data; // Thêm dòng này
+      const responseData = response.data;
 
       if (responseData.success) {
         switch (responseData.paymentStatus) {
           case "PENDING":
             setMessageSuccess(responseData.message);
             setOpen(true);
-            setTimeout(() => resetForm(), 3000);
+            navigate(`/infor-booking/${orderInfo.tourId}`);
+            resetForm();
             break;
 
           case "REDIRECT":
@@ -147,8 +164,7 @@ function OrderDetailTour() {
           default:
             setMessageSuccess("Checkout thành công!");
             setOpen(true);
-            setTimeout(() => resetForm(), 3000);
-
+            resetForm();
             break;
         }
       }
@@ -242,14 +258,14 @@ function OrderDetailTour() {
           </Alert>
         ) : null}
       </Snackbar>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Box sx={{ width: "80%", display: "flex", flexDirection: "column" }}>
           <Typography
             variant="h3"
             fontWeight={"bold"}
-            sx={{ mb: 5, color: "primary.main" }}
+            sx={{ mb: 2, color: "primary.main" }}
           >
-            Tổng Quan Về Chuyến Đi
+            ĐẶT TOUR
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit} method="POST">
@@ -475,48 +491,13 @@ function OrderDetailTour() {
                     </Grid>
                   </Grid>
 
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      alignItems: "center",
-                      backgroundColor: "background.paper",
-                      mt: 5,
-                      p: 3,
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Bằng cách nhấp chuột vào nút "ĐỒNG Ý" dưới đây, Khách hàng
-                      đồng ý rằng các Điều kiện điều khoản này sẽ được áp dụng.
-                      Vui lòng đọc kỹ Điều kiện điều khoản trước khi lựa chọn sử
-                      dụng dịch vụ của Lửa Việt Tours.
-                    </Typography>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={agreeToTerms}
-                            onChange={handleCheckboxChange}
-                          />
-                        }
-                        label="Tôi đã đọc và đồng ý với Điều khoản thanh toán"
-                      />
-                    </FormGroup>
-                  </Box>
-
                   <Typography
                     sx={{ fontSize: "1.4rem", fontWeight: "500", mt: 5, mb: 3 }}
                   >
                     Phương Thức Thanh Toán
                   </Typography>
 
-                  <FormControl fullWidth component="fieldset" sx={{ mb: 15 }}>
+                  <FormControl fullWidth component="fieldset" sx={{}}>
                     <RadioGroup
                       value={paymentMethod}
                       onChange={(e) => setPaymentMethod(e.target.value)}
@@ -602,14 +583,13 @@ function OrderDetailTour() {
                           borderColor:
                             paymentMethod === "gPay"
                               ? "primary.main"
-                              : "grey.300", // hoặc màu border mặc định bạn muốn
+                              : "grey.300",
                           cursor: "pointer",
                           backgroundColor:
                             paymentMethod === "gPay"
                               ? "background.default"
                               : "background.default",
                         }}
-                        // onClick={() => setPaymentMethod("gPay")}
                       >
                         <GoogleIcon sx={{ mr: 1, color: "primary.main" }} />
                         <FormControlLabel
@@ -621,9 +601,56 @@ function OrderDetailTour() {
                       </Card>
                     </RadioGroup>
                   </FormControl>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      alignItems: "center",
+                      backgroundColor: "background.paper",
+                      mt: 5,
+                      p: 3,
+                      mb: 10,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      Bằng cách nhấp chuột vào nút{" "}
+                      <span style={{ fontWeight: "bold" }}>" ĐỒNG Ý "</span>{" "}
+                      dưới đây, Khách hàng đồng ý rằng các Điều kiện điều khoản
+                      này sẽ được áp dụng. Vui lòng đọc kỹ Điều kiện điều khoản
+                      trước khi lựa chọn sử dụng dịch vụ của Tour Ease.
+                    </Typography>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={agreeToTerms}
+                            onChange={handleCheckboxChange}
+                          />
+                        }
+                        sx={{
+                          "& .MuiFormControlLabel-label": {
+                            fontWeight: "bold",
+                          },
+                        }}
+                        label="Tôi đã đọc và đồng ý với Điều khoản thanh toán"
+                      />
+                    </FormGroup>
+                  </Box>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={12} md={4}>
+                <Typography
+                  sx={{ fontSize: "1.4rem", fontWeight: "500", mb: 3 }}
+                >
+                  Tóm tắt chuyến đi
+                </Typography>
                 <Box
                   sx={{
                     display: "flex",
@@ -633,23 +660,132 @@ function OrderDetailTour() {
                     backgroundColor: "background.paper",
                   }}
                 >
-                  <Typography
-                    sx={{ fontSize: "1.2rem", fontWeight: 500, mb: 3 }}
+                  <Box
+                    sx={{
+                      display: "flex",
+
+                      mb: 2,
+                    }}
                   >
-                    {orderInfo.title}
+                    <Box
+                      sx={{
+                        width: "400px",
+                        height: "120px",
+                        backgroundImage: `url(${
+                          orderInfo.images && orderInfo.images[0]
+                            ? orderInfo.images[0]
+                            : "https://via.placeholder.com/600x400?text=No+Image"
+                        })`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        boxShadow: 2,
+                        borderRadius: 1,
+                      }}
+                    ></Box>
+
+                    <Typography
+                      sx={{
+                        fontSize: "1.1rem",
+                        fontWeight: 500,
+                        ml: 2,
+                      }}
+                    >
+                      {orderInfo.title}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "0.9rem",
+                      ml: 1,
+                      mt: 1,
+                      gap: 1,
+                    }}
+                  >
+                    <QrCode2Icon sx={{ mr: 0.5, fontSize: "1.2rem" }} />
+                    Mã tour:&nbsp;
+                    <Typography sx={{ fontWeight: 500 }}>
+                      {orderInfo.tourCode}
+                    </Typography>
                   </Typography>
                   <Typography
-                    variant="body2"
-                    sx={{ fontSize: "0.5 rem", mb: 2 }}
+                    variant="caption"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "1rem",
+                      ml: 1,
+                      mt: 1,
+                      gap: 1,
+                    }}
                   >
-                    Ngày khởi hành: {orderInfo.startDate}
+                    <CalendarMonthIcon sx={{ mr: 0.5, fontSize: "1.2rem" }} />
+                    Ngày khởi hành:&nbsp;
+                    <Typography sx={{ fontWeight: 500 }}>
+                      {selectedDate}
+                    </Typography>
                   </Typography>
+
                   <Typography
-                    variant="body2"
-                    sx={{ fontSize: "0.5 rem", mb: 3 }}
+                    variant="caption"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "1rem",
+                      ml: 1,
+                      mt: 1,
+                      gap: 1,
+                    }}
                   >
-                    Ngày kết thúc: {orderInfo.endDate}
+                    <AccessTimeIcon sx={{ mr: 0.5, fontSize: "1.2rem" }} />
+                    Thời gian:&nbsp;
+                    <Typography sx={{ fontWeight: 500 }}>
+                      {orderInfo.duration}
+                    </Typography>
                   </Typography>
+
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "0.9rem",
+                      ml: 1,
+                      mt: 1,
+                      gap: 1,
+                    }}
+                  >
+                    <MyLocationIcon sx={{ mr: 0.5, fontSize: "1.2rem" }} />
+                    Khởi hành:&nbsp;
+                    <Typography
+                      sx={{
+                        fontWeight: 500,
+                      }}
+                    >
+                      {orderInfo.departureLocation}
+                    </Typography>
+                  </Typography>
+
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "1rem",
+                      ml: 1,
+                      mt: 1,
+                      gap: 1,
+                    }}
+                  >
+                    <FlightTakeoffIcon sx={{ mr: 0.5, fontSize: "1.2rem" }} />
+                    Phương tiện:&nbsp;
+                    <Typography sx={{ fontWeight: 500 }}>
+                      {orderInfo.transportation}
+                    </Typography>
+                  </Typography>
+
                   <Divider sx={{ mb: 3 }} />
                   <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
@@ -721,6 +857,7 @@ function OrderDetailTour() {
                           sx={{
                             height: "60px",
                             backgroundColor: "primary.main",
+                            color: "text.primary",
                             borderRadius: 2,
                           }}
                         >
@@ -740,6 +877,7 @@ function OrderDetailTour() {
                     sx={{
                       height: "50px",
                       backgroundColor: "primary.main",
+                      color: "text.primary",
                     }}
                   >
                     Xác Nhận

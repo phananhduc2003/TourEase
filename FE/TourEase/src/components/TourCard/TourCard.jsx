@@ -148,7 +148,7 @@ function TourCard({ onclickChangePage }) {
                 {/* Location */}
                 <Typography
                   variant="caption"
-                  sx={{ mt: 1, color: "text.secondary" }}
+                  sx={{ mt: 1, color: "text.secondary", fontSize: "0.9rem" }}
                 >
                   <LocationOnIcon
                     sx={{
@@ -162,9 +162,9 @@ function TourCard({ onclickChangePage }) {
 
                 {/* Title */}
                 <Typography
-                  variant="h6"
                   sx={{
                     fontWeight: "bold",
+                    fontSize: "1.4rem",
                     mt: 1,
                     // Giới hạn 2 dòng
                     display: "-webkit-box",
@@ -180,9 +180,9 @@ function TourCard({ onclickChangePage }) {
                 {/* Duration */}
                 <Typography
                   variant="body2"
-                  sx={{ mt: 1, color: "text.secondary" }}
+                  sx={{ mt: 1, color: "text.secondary", fontSize: "1rem" }}
                 >
-                  {tour.duration || "Thời gian chưa cập nhật"}
+                  🕒 {tour.duration || "🕒 Thời gian chưa cập nhật"}
                 </Typography>
               </Box>
 
@@ -192,17 +192,18 @@ function TourCard({ onclickChangePage }) {
               <Box sx={{ display: "flex", mx: 2, mt: 2, mb: 1 }}>
                 <Grid container sx={{ width: "100%" }} alignItems="center">
                   <Grid item xs={6}>
-                    <Typography
-                      variant="h6"
-                      fontWeight="bold"
-                      color="primary.main"
-                    >
+                    <Typography variant="h6" fontWeight="bold">
                       {tour.priceAdult
                         ? Number(tour.priceAdult).toLocaleString("vi-VN")
                         : "Liên hệ"}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      VND / người
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontSize: "0.6rem" }}
+                      >
+                        VND
+                      </Typography>
                     </Typography>
                   </Grid>
                   <Grid item xs={6} sx={{ textAlign: "right" }}>

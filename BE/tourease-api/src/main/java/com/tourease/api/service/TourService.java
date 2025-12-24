@@ -38,10 +38,13 @@ public class TourService {
 		Double defaultTotalPrice = tour.getPriceAdult() * 1 + tour.getPriceChild() * 0;
 		
 		return TourOrderedResponse.builder()
+				.tourCode(tour.getTourCode())
 				.tourId(tour.getTourID())
 				.title(tour.getTitle())
-				.startDate(tour.getStartDate())
-				.endDate(tour.getEndDate())
+				.transportation(tour.getTransportation())
+				.departureLocation(tour.getDepartureLocation())
+				.duration(tour.getDuration())
+				.images(tour.getImages())
 				.priceAdult(tour.getPriceAdult())
 				.priceChild(tour.getPriceChild())
 				.defaultAdults(1)
@@ -50,45 +53,46 @@ public class TourService {
 				.build();
 	}
 	
-	/**
-	 * Lấy danh sách destinations có sẵn
-	 */
 	public List<String> getAvailableDestinations() {
 		return tourRepository.findDistinctDestinations();
+	}
+	
+	public List<String> getAvailableDepartureLocation() {
+		return tourRepository.findDistinctDepartureLocations();
+	}
+	
+	public List<String> getAvailableTransportation() {
+		return tourRepository.findDistinctTransportations();
 	}
 	
 	
 	public List<Tour> getLatestTours() {
 		Pageable pageable = PageRequest.of(0, 8);
 		Page<Tour> tourPage = tourRepository.findByAvailabilityTrueOrderByTourIDDesc(pageable);
-		return tourPage.getContent(); //getContent() sẽ trả về danh sách các phần tử trong trang hiện tại dưới dạng List<Tour>
+		return tourPage.getContent(); 
 	}
 	
-	/**
-     * Lấy ra 6 tour được booking nhiều nhất và CONFIRMED nhiều nhất
-     */
+	
 	public List<Tour> getPopularTours() {
 		return tourRepository.findPopularTours();
 	}
-	
-	
-	/**
-	 * Map sortBy parameter sang field name thực tế
-	 */
+
 	private String getSortField(String sortBy) {
 		switch (sortBy.toLowerCase()) {
-			case "price":
-				return "priceAdult";
-			case "title":
-				return "title";
-			case "destination":
-				return "destination";
-			case "duration":
-				return "duration";
-			case "date":
-				return "startDate";
-			default:
-				return "tourID"; // Default sort by ID
+		case "price":
+        case "priceadult":        
+            return "priceAdult";
+        case "title":
+            return "title";
+        case "destination":
+            return "destination";
+        case "duration":
+            return "duration";
+        case "date":
+        case "startdate":         
+            return "startDate";
+        default:
+            return "tourID";      
 		}
 	}
 	
@@ -96,20 +100,25 @@ public class TourService {
 	/**
 	 * Lấy tours với filtering và pagination
 	 */
-	public Page<Tour> getToursWithFilters(int page, int size, List<String> destinations, 
+	public Page<Tour> getToursWithFilters(int page, int size, List<String> destinations,
+			List<String> departureLocations, List<String> transportations,
             Double minPrice, Double maxPrice, 
             String sortBy, String sortDir) {
 
-		// Tạo Sort object
+		
 		Sort sort = Sort.by(Sort.Direction.fromString(sortDir), getSortField(sortBy));
 
-		// Tạo Pageable với sort
+		
 		Pageable pageable = PageRequest.of(page, size, sort);
 		
 		List<String> finalDestinations = (destinations == null || destinations.isEmpty()) ? null : destinations;
+		
+		List<String> finaldepartureLocations = (departureLocations == null || departureLocations.isEmpty()) ? null : departureLocations;
+		
+		List<String> finaltransportations = (transportations == null || transportations.isEmpty()) ? null : transportations;
 
-		// Gọi repository với filters
-		return tourRepository.findToursWithFilters(finalDestinations, minPrice, maxPrice, pageable);
+	
+		return tourRepository.findToursWithFilters(finalDestinations,finaldepartureLocations,finaltransportations, minPrice, maxPrice, pageable);
 	}
 	
 }
