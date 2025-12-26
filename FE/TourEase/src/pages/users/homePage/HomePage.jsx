@@ -48,7 +48,6 @@ function HomePage() {
 
   const handleNavigateToTour = (tourId) => {
     navigate(`/tour-detail/${tourId}`);
-    window.scrollTo(0, 0);
   };
 
   return (

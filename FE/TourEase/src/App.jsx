@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react"; //component dùng để chứa.
+import { Fragment } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -13,7 +13,7 @@ import DefaultLayout from "./layouts/DefaultLayout";
 import AuthProvider from "./context/AuthProvider";
 import { useAuth } from "./context/AuthContext";
 import { Box, CircularProgress } from "@mui/material";
-import LoadingScreen from "./layouts/components/loadingScreen/LoadingScreen";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 // Chặn truy cập nếu chưa đăng nhập
 const AuthenticatedRoute = ({ children }) => {
@@ -66,22 +66,9 @@ const AdminRoute = ({ children }) => {
 
 const AnimatedRoutes = () => {
   const location = useLocation();
-  const [isNavigating, setIsNavigating] = useState(false);
-
-  useEffect(() => {
-    setIsNavigating(true);
-
-    const timer = setTimeout(() => {
-      setIsNavigating(false);
-    }, 300); // Giảm xuống 300ms cho mượt hơn
-
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
 
   return (
     <>
-      {isNavigating && <LoadingScreen />}
-
       <Routes location={location}>
         {/* Routes bình thường */}
         {defaultRoutes.map((route, index) => {
@@ -137,6 +124,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <AnimatedRoutes />
       </BrowserRouter>
     </AuthProvider>

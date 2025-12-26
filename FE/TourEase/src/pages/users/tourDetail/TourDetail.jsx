@@ -79,7 +79,6 @@ function TourDetail() {
 
   const handleOrderDetailTour = () => {
     navigate(`/order-detail-tour/${tourId}`, { state: { selectedDate } });
-    window.scrollTo(0, 0);
   };
 
   // Loading state
