@@ -210,7 +210,6 @@ function TourPage() {
 
   const handleTourClick = (tourID) => {
     navigate(`/tour-detail/${tourID}`);
-    window.scrollTo(0, 0);
   };
 
   return (

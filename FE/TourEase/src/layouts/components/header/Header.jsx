@@ -79,7 +79,6 @@ function Header() {
 
   const handleNavigationProfile = () => {
     navigate("/profile");
-    window.scrollTo(0, 0);
   };
 
   const handleLogout = () => {
@@ -233,7 +232,6 @@ function Header() {
                 onClick={() => {
                   setActiveIndex(idx);
                   navigate(item.path);
-                  window.scrollTo(0, 0);
                 }}
               >
                 {item.name}
