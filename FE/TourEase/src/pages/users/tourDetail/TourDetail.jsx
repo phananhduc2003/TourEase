@@ -91,9 +91,7 @@ function TourDetail() {
           alignItems: "center",
           minHeight: "60vh",
         }}
-      >
-        <CircularProgress color="primary" />
-      </Box>
+      ></Box>
     );
   }
 
