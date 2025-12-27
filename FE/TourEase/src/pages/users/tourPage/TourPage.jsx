@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ApiFilterTour } from "../../../api/user/ApiFilterTour";
 import { ApiGetDestinations } from "../../../api/user/ApiGetDestinations";
@@ -12,37 +12,36 @@ import { ApiGetTransportations } from "../../../api/user/ApiGetTransportations";
 function TourPage() {
   const navigate = useNavigate();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tours, setTours] = useState([]);
   const [sortOption, setSortOption] = useState("");
   const [pagination, setPagination] = useState({});
   const [destinations, setDestinations] = useState([]);
-  const [selectedDestinations, setSelectedDestinations] = useState([]);
+  const selectedDestinations = searchParams.getAll("destinations");
   const [departureLocations, setDepartureLocations] = useState([]);
-  const [selectedDepartureLocations, setSelectedDepartureLocations] = useState(
-    []
-  );
+  const selectedDepartureLocations = searchParams.getAll("departureLocations");
   const [transportations, setTransportations] = useState([]);
-  const [selectedTransportations, setSelectedTransportations] = useState([]);
+  const selectedTransportations = searchParams.getAll("transportations");
   const [priceRange, setPriceRange] = useState([0, 15]);
 
-  const [filters, setFilters] = useState({
-    page: 0,
+  const filters = {
+    page: Number(searchParams.get("page")) || 0,
     size: 9,
-    destinations: [],
-    departureLocations: [],
-    transportations: [],
-    minPrice: "",
-    maxPrice: "",
-    sortBy: "tourID",
-    sortDir: "asc",
-  });
+    destinations: searchParams.getAll("destinations"),
+    departureLocations: searchParams.getAll("departureLocations"),
+    transportations: searchParams.getAll("transportations"),
+    minPrice: searchParams.get("minPrice") || "",
+    maxPrice: searchParams.get("maxPrice") || "",
+    sortBy: searchParams.get("sortBy") || "tourID",
+    sortDir: searchParams.get("sortDir") || "asc",
+  };
 
   useEffect(() => {
     loadTours();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+    // eslint-disable-next-line
+  }, [searchParams]);
 
   useEffect(() => {
     getDestinations();
@@ -108,7 +107,20 @@ function TourPage() {
     }
   };
   const handleFilterChange = (newFilters) => {
-    setFilters((prev) => ({ ...prev, ...newFilters, page: 0 }));
+    const params = new URLSearchParams(searchParams);
+
+    Object.entries(newFilters).forEach(([key, value]) => {
+      params.delete(key);
+
+      if (Array.isArray(value)) {
+        value.forEach((v) => params.append(key, v));
+      } else if (value !== "" && value !== null) {
+        params.set(key, value);
+      }
+    });
+
+    params.set("page", 0);
+    setSearchParams(params);
   };
 
   const handlePriceChange = (e, newValue) => setPriceRange(newValue);
@@ -120,53 +132,35 @@ function TourPage() {
     });
   };
 
-  const handleDestinationChange = (dest, clearAll = false) => {
-    if (clearAll) {
-      setSelectedDestinations([]);
-      handleFilterChange({ destinations: [] });
-      return;
-    }
-
+  const handleDestinationChange = (dest) => {
     const newSelected = selectedDestinations.includes(dest)
       ? selectedDestinations.filter((d) => d !== dest)
       : [...selectedDestinations, dest];
 
-    setSelectedDestinations(newSelected);
     handleFilterChange({ destinations: newSelected });
   };
 
-  const handleDepartureLocationChange = (location, clearAll = false) => {
-    if (clearAll) {
-      setSelectedDepartureLocations([]);
-      handleFilterChange({ departureLocations: [] });
-      return;
-    }
-
+  const handleDepartureLocationChange = (location) => {
     const newSelected = selectedDepartureLocations.includes(location)
       ? selectedDepartureLocations.filter((l) => l !== location)
       : [...selectedDepartureLocations, location];
 
-    setSelectedDepartureLocations(newSelected);
     handleFilterChange({ departureLocations: newSelected });
   };
 
-  const handleTransportationChange = (transport, clearAll = false) => {
-    if (clearAll) {
-      setSelectedTransportations([]);
-      handleFilterChange({ transportations: [] });
-      return;
-    }
-
+  const handleTransportationChange = (transport) => {
     const newSelected = selectedTransportations.includes(transport)
       ? selectedTransportations.filter((t) => t !== transport)
       : [...selectedTransportations, transport];
 
-    setSelectedTransportations(newSelected);
     handleFilterChange({ transportations: newSelected });
   };
 
   const handlePageChange = (e, newPage) => {
-    setFilters((prev) => ({ ...prev, page: newPage - 1 }));
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage - 1);
+    setSearchParams(params);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -190,26 +184,11 @@ function TourPage() {
   };
 
   const handleClearFilters = () => {
-    setSelectedDestinations([]);
-    setSelectedDepartureLocations([]);
-    setSelectedTransportations([]);
-    setPriceRange([0, 15]);
-    setSortOption("");
-    setFilters({
-      page: 0,
-      size: 9,
-      destinations: [],
-      departureLocations: [],
-      transportations: [],
-      minPrice: "",
-      maxPrice: "",
-      sortBy: "tourID",
-      sortDir: "asc",
-    });
+    setSearchParams({});
   };
 
   const handleTourClick = (tourID) => {
-    navigate(`/tour-detail/${tourID}`);
+    navigate(`/tour-detail/${tourID}?${searchParams.toString()}`);
   };
 
   return (

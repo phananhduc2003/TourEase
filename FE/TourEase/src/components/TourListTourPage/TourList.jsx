@@ -161,7 +161,7 @@ function TourList({
                         mx: 2,
                       }}
                     >
-                      <Typography variant="caption" sx={{ mt: 2 }}>
+                      <Typography variant="caption">
                         <LocationOnIcon
                           sx={{ verticalAlign: "middle", fontSize: "small" }}
                         />
