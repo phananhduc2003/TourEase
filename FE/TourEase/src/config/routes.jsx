@@ -11,7 +11,11 @@ const routes = {
   profile: "/profile",
   inforBooking: "/infor-booking/:tourId",
 
-  homeAdmin: "/homeadmin",
+  dashboard: "/dashboard",
+  manageadmin: "/manage-admin",
+  managetours: "/manage-tours",
+  manageusers: "/manage-users",
+  managebookings: "/manage-bookings",
 };
 
 export default routes;
