@@ -28,7 +28,7 @@ function MenuItem({ title, to }) {
             },
           }}
         >
-          <Box sx={{ ml: "10px" }}>{title}</Box>
+          <Box>{title}</Box>
         </Box>
       )}
     </NavLink>

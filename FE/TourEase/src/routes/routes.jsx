@@ -1,7 +1,7 @@
 import config from "../config";
 import AdminLayout from "../layouts/adminLayout/AdminLayout";
 import AuthLayout from "../layouts/AuthLayout/AuthLayout";
-import HomeAdmin from "../pages/admin/homeAdmin/HomeAdmin";
+
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/register/Register";
 import ContactPage from "../pages/users/contactPage/ContactPage";
@@ -14,7 +14,13 @@ import TourDetail from "../pages/users/tourDetail/TourDetail";
 import TourPage from "../pages/users/tourPage/TourPage";
 import InforUser from "../pages/users/profileUser/ProfileUser";
 import InforBooking from "../pages/users/inforBooking/InforBooking";
-import inforUserLayout from "../layouts/inforUserLayout/inforUserLayout";
+import inforUserLayout from "../layouts/inforUserLayout/InforUserLayout";
+
+import Dashboard from "../pages/admin/dashboard/Dashboard";
+import ManageUsers from "../pages/admin/manageUsers/ManageUsers";
+import ManageBookings from "../pages/admin/manageBookings/ManageBooking";
+import ManageAdmin from "../pages/admin/manageAdmin/ManageAdmin";
+import ManageTours from "../pages/admin/manageTours/ManageTours";
 
 const defaultRoutes = [
   { path: config.routes.home, component: HomePage },
@@ -48,10 +54,30 @@ const defaultRoutes = [
 
 const adminRoutes = [
   {
-    path: config.routes.homeAdmin,
-    component: HomeAdmin,
+    path: config.routes.dashboard,
+    component: Dashboard,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.manageadmin,
+    component: ManageAdmin,
+    layout: AdminLayout,
+  },
+
+  {
+    path: config.routes.managetours,
+    component: ManageTours,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.manageusers,
+    component: ManageUsers,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.managebookings,
+    component: ManageBookings,
     layout: AdminLayout,
   },
 ];
-
 export { defaultRoutes, adminRoutes };
