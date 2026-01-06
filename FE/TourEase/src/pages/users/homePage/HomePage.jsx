@@ -28,6 +28,8 @@ import TourCard from "../../../components/TourCard/TourCard";
 import CardPopularTour from "../../../components/CardPopularTour/CardPopularTour";
 import { useNavigate } from "react-router-dom";
 
+import ChatWidget from "../../../components/Chat/ChatWidget";
+
 const wrapper = {
   display: "flex",
   flexDirection: "column",
@@ -721,6 +723,9 @@ function HomePage() {
               </Box>
             </Grid>
           </Grid>
+        </Box>
+        <Box>
+          <ChatWidget />
         </Box>
       </Box>
     </>

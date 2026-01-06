@@ -16,6 +16,8 @@ import com.tourease.api.entity.Tour;
 @Repository
 public interface TourRepository extends JpaRepository<Tour, Integer> {
 	
+	 List<Tour> findTop25ByOrderByTourIDAsc();
+	
 	
 	/**
      * Alternative: Lấy ra tours mới nhất
@@ -68,4 +70,6 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
     
     @Query("SELECT DISTINCT t.transportation FROM Tour t WHERE t.availability = true AND t.transportation IS NOT NULL")
     List<String> findDistinctTransportations();
+    
+   
 }

@@ -19,12 +19,13 @@ function TourPage() {
   const [sortOption, setSortOption] = useState("");
   const [pagination, setPagination] = useState({});
   const [destinations, setDestinations] = useState([]);
-  const selectedDestinations = searchParams.getAll("destinations");
   const [departureLocations, setDepartureLocations] = useState([]);
-  const selectedDepartureLocations = searchParams.getAll("departureLocations");
   const [transportations, setTransportations] = useState([]);
-  const selectedTransportations = searchParams.getAll("transportations");
   const [priceRange, setPriceRange] = useState([0, 15]);
+
+  const selectedDestinations = searchParams.getAll("destinations");
+  const selectedDepartureLocations = searchParams.getAll("departureLocations");
+  const selectedTransportations = searchParams.getAll("transportations");
 
   const filters = {
     page: Number(searchParams.get("page")) || 0,
@@ -106,6 +107,7 @@ function TourPage() {
       console.error(error);
     }
   };
+
   const handleFilterChange = (newFilters) => {
     const params = new URLSearchParams(searchParams);
 
