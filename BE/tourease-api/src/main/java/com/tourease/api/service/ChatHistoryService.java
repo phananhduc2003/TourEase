@@ -34,7 +34,8 @@ public class ChatHistoryService {
     }
 
     @Transactional
-    public void saveChatMessages(Integer userID, String userMessage, String botMessage, String currentUsername) {
+    public void saveChatMessages(Integer userID, String userMessage, String botMessage, 
+                                 String botType, String tours, String currentUsername) {
         User user = userRepository.findById(userID)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -42,18 +43,23 @@ public class ChatHistoryService {
             throw new UnsupportedOperationException("You don't have permission to save chat");
         }
 
+        // Lưu tin nhắn user
         ChatHistory userChat = ChatHistory.builder()
                 .user(user)
                 .sender("user")
                 .message(userMessage)
+                .type("text")
                 .createdAt(LocalDateTime.now())
                 .build();
         chatHistoryRepository.save(userChat);
 
+        // Lưu tin nhắn bot (có thể bao gồm tours)
         ChatHistory botChat = ChatHistory.builder()
                 .user(user)
                 .sender("bot")
                 .message(botMessage)
+                .type(botType != null ? botType : "text")
+                .tours(tours)
                 .createdAt(LocalDateTime.now())
                 .build();
         chatHistoryRepository.save(botChat);

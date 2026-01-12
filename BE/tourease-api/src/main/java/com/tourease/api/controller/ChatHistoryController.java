@@ -40,6 +40,8 @@ public class ChatHistoryController {
             request.getUserID(), 
             request.getUserMessage(), 
             request.getBotMessage(),
+            request.getBotType(),
+            request.getTours(),
             currentUsername
         );
         

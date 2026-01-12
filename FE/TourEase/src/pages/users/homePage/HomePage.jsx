@@ -44,7 +44,7 @@ function HomePage() {
   const heroImages = [hero1, hero2, hero3, hero4, hero5, hero6];
 
   const { ref, inView } = useInView({
-    triggerOnce: false, // ✅ cho phép chạy lại animation nhiều lần
+    triggerOnce: false, //  cho phép chạy lại animation nhiều lần
     threshold: 0.1,
   });
 
