@@ -1,5 +1,7 @@
 package com.tourease.api.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tourease.api.DTO.ChatRequest;
-import com.tourease.api.DTO.ChatResponse;
 import com.tourease.api.service.ChatService;
 
 @RestController
@@ -20,8 +21,8 @@ public class ChatController {
 	private ChatService chatService;
 	
 	@PostMapping
-	public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
-		String answer = chatService.handleMessage(request.getMessage());
-        return ResponseEntity.ok(new ChatResponse(answer));
+	public ResponseEntity<Map<String, Object>> chat(@RequestBody ChatRequest request) {
+		Map<String, Object> response = chatService.handleMessage(request.getMessage());
+        return ResponseEntity.ok(response);
 	}
 }

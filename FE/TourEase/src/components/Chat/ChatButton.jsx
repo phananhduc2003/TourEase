@@ -6,7 +6,6 @@ function ChatButton({ onClick }) {
       onClick={onClick}
       sx={{
         position: "fixed",
-
         bottom: 24,
         right: 24,
         zIndex: 1000,
@@ -15,8 +14,8 @@ function ChatButton({ onClick }) {
         transition: "transform 0.3s ease-in-out",
         "&:hover": {
           transform: "scale(1.1)",
-          boxShadow: 4, // thêm đổ bóng nếu muốn
-          cursor: "pointer", // đổi con trỏ chuột
+          boxShadow: 4,
+          cursor: "pointer",
           backgroundColor: "primary.main",
           color: "white",
         },

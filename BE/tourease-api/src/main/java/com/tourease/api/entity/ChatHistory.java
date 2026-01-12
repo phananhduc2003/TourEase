@@ -31,8 +31,18 @@ public class ChatHistory {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     
+
+    @Column(name = "type", length = 20)
+    private String type;
+
+    @Column(name = "tours", columnDefinition = "TEXT")
+    private String tours;
+    
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if (type == null) {
+            type = "text";
+        }
     }
 }
