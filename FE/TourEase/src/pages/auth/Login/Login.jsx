@@ -62,7 +62,7 @@ function Login() {
 
     if (role !== null) {
       if (role === 1) {
-        navigate(`/homeadmin`);
+        navigate(`/dashboard`);
       } else {
         navigate(`/`);
       }

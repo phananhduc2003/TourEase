@@ -12,32 +12,34 @@ function MenuItem({ title, to, icon }) {
               display: "flex",
               width: "100%",
               height: "58px",
-
               p: "8px",
               color: "text.primary",
-              fontSize: "1.2rem",
-              fontWeight: 700,
-              borderRadius: 1,
+              fontSize: "1rem",
+              fontWeight: 500,
+              alignItems: "center",
 
+              borderBottom: "1px solid",
               transition: "background-color 200ms ease-in-out",
 
               "&.active": {
                 color: "primary.main",
-                fontSize: "1.3rem",
+                fontSize: "1.2rem",
+                ml: "4px",
               },
 
               "&:hover": {
-                backgroundColor: "sidebar.menu",
+                ml: "4px",
               },
             }}
           >
             <Box
               sx={{
-                ml: 3,
+                ml: 1,
                 mr: 1,
                 display: "flex",
                 alignItems: "center",
                 position: "relative",
+                top: 0,
                 bottom: "8px",
               }}
             >

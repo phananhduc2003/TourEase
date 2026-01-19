@@ -32,9 +32,7 @@ public class ChatService {
         QuestionType questionType = classifyQuestion(message);
         
         if (questionType == QuestionType.INFORMATION_QUERY) {
-            // ═══════════════════════════════════════════════════════
             // LOẠI 1: HỎI THÔNG TIN VỀ ĐỊA ĐIỂM - KHÔNG HIỂN THỊ TOUR
-            // ═══════════════════════════════════════════════════════
             String prompt = String.format("""
                 Bạn là chatbot tư vấn du lịch chuyên nghiệp của TourEase.
                 
@@ -55,9 +53,7 @@ public class ChatService {
             response.put("message", aiResponse);
             
         } else if (questionType == QuestionType.TOUR_SEARCH) {
-            // ═══════════════════════════════════════════════════════
             // LOẠI 2: TÌM/ĐẶT TOUR - HIỂN THỊ TOUR
-            // ═══════════════════════════════════════════════════════
             List<Tour> tours = tourRepository.findTop25ByOrderByTourIDAsc();
             QueryIntent intent = analyzeQueryIntent(message);
             List<Tour> filteredTours = filterToursAdvanced(tours, intent);
@@ -199,9 +195,9 @@ public class ChatService {
      * Enum phân loại câu hỏi
      */
     private enum QuestionType {
-        TOUR_SEARCH,        // Tìm/đặt tour
-        INFORMATION_QUERY,  // Hỏi thông tin địa điểm
-        OTHER               // Câu hỏi khác
+        TOUR_SEARCH,        
+        INFORMATION_QUERY,  
+        OTHER              
     }
     
     /**

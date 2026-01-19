@@ -31,8 +31,8 @@ const theme = extendTheme({
         secondary: {
           light: "#3674B5", // Màu xanh nước biển sáng
           main: "#578FCA", // Màu chính xanh nước biển
-          dark: "#1976d2", // Màu xanh nước biển đậm
-          contrastText: "#ffffff", // Chữ trắng
+          dark: "#1976d2",
+          contrastText: "#ffffff",
         },
         sidebar: {
           menu: "#FFEFD7",
@@ -54,12 +54,12 @@ const theme = extendTheme({
           second: "#0F1214",
         },
         background: {
-          default: "#2C2C2C ", // Nền tối
-          paper: "#373A40", // Nền giấy tối
+          default: "#2C2C2C ",
+          paper: "#444444",
           second: "#e0e0e0",
         },
         secondary: {
-          light: "#444444 ",
+          light: "#373A40 ",
           main: "#B0B0B0 ",
           dark: "#B0B0B0",
           contrastText: "#ffffff",
