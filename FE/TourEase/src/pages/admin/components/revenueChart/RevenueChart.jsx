@@ -16,8 +16,11 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 function RevenueChart({ data, timeRange, onTimeRangeChange }) {
+  const theme = useTheme();
+
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -82,9 +85,13 @@ function RevenueChart({ data, timeRange, onTimeRangeChange }) {
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
+              <XAxis
+                dataKey="date"
+                tick={{ fontSize: 14, fill: theme.palette.text.primary }}
+              />
               <YAxis
                 tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`}
+                tick={{ fontSize: 14, fill: theme.palette.text.primary }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />

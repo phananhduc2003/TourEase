@@ -8,8 +8,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box, useTheme } from "@mui/material";
+
 function TopToursChart({ data }) {
+  const theme = useTheme();
+
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -45,22 +48,36 @@ function TopToursChart({ data }) {
     }
     return null;
   };
+  function shortenTitle(title) {
+    const maxLength = 20; // Adjust the maximum length as needed
+    return title.length > maxLength ? `${title.slice(0, maxLength)}...` : title;
+  }
   return (
     <>
       <Card>
         <CardContent>
-          <Typography variant="h6" fontWeight="bold" mb={2}>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            mb={2}
+            color="text.primary"
+          >
             Top 5 Tours Phổ Biến Nhất
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" />
+              <XAxis
+                type="number"
+                tick={{ fontSize: 14, fill: theme.palette.text.primary }}
+              />
               <YAxis
                 dataKey="tourName"
                 type="category"
                 width={150}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 14, fill: theme.palette.text.primary }}
+                tickFormatter={shortenTitle}
+                color=""
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />

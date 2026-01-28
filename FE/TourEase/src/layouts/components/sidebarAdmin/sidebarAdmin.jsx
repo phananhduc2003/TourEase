@@ -58,7 +58,7 @@ function SidebarAdmin() {
             icon={<AssessmentIcon />}
           />
           <MenuItem
-            title="Quản lý người dùng"
+            title="Quản lý users"
             to="/manage-users"
             icon={<AssessmentIcon />}
           />

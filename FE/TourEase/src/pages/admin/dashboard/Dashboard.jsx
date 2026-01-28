@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Alert, Box, CircularProgress, Grid, Typography } from "@mui/material";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import WifiIcon from "@mui/icons-material/Wifi";
 import PeopleIcon from "@mui/icons-material/People";
@@ -7,35 +7,75 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import RevenueChart from "../components/RevenueChart/RevenueChart";
 import BookingStatusChart from "../components/BookingStatusChart/BookingStatusChart";
 import TopToursChart from "../components/topToursChart/TopToursChart";
-import { useState } from "react";
-
-const revenueData = [
-  { date: "01/01", revenue: 45000000, bookings: 12 },
-  { date: "02/01", revenue: 52000000, bookings: 15 },
-  { date: "03/01", revenue: 48000000, bookings: 13 },
-  { date: "04/01", revenue: 61000000, bookings: 18 },
-  { date: "05/01", revenue: 55000000, bookings: 16 },
-  { date: "06/01", revenue: 67000000, bookings: 20 },
-  { date: "07/01", revenue: 73000000, bookings: 22 },
-];
-
-const topToursData = [
-  { tourName: "Hạ Long - Sapa 5N4Đ", bookings: 45, revenue: 180000000 },
-  { tourName: "Phú Quốc Resort 4N3Đ", bookings: 38, revenue: 152000000 },
-  { tourName: "Đà Nẵng - Hội An 3N2Đ", bookings: 32, revenue: 96000000 },
-  { tourName: "Nha Trang Biển Xanh", bookings: 28, revenue: 84000000 },
-  { tourName: "TPHCM - Mũi Né 2N1Đ", bookings: 22, revenue: 55000000 },
-];
-
-const bookingStatusData = [
-  { status: "Confirmed", value: 145, color: "#4caf50" },
-  { status: "Pending", value: 32, color: "#ff9800" },
-  { status: "Cancelled", value: 18, color: "#f44336" },
-  { status: "Completed", value: 89, color: "#2196f3" },
-];
+import { useEffect, useState } from "react";
+import { ApiGetRevenueData } from "../../../api/admin/ApiGetRevenueData";
+import { ApiGetTopTours } from "../../../api/admin/ApiGetTopTours";
+import { ApiGetBookingStatus } from "../../../api/admin/ApiGetBookingStatus";
+import { ApiGetStatsOverview } from "../../../api/admin/ApiGetStatsOverview";
 
 function Dashboard() {
   const [timeRange, setTimeRange] = useState("week");
+
+  const [dataRevenue, setDataRevenue] = useState([]);
+  const [dataTopTours, setDataTopTours] = useState([]);
+  const [dataBookingStatus, setDataBookingStatus] = useState([]);
+  const [statsOverview, setStatsOverview] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [timeRange]);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [revenueRes, topToursRes, bookingStatusRes, statsRes] =
+        await Promise.all([
+          ApiGetRevenueData(timeRange),
+          ApiGetTopTours(),
+          ApiGetBookingStatus(),
+          ApiGetStatsOverview(),
+        ]);
+
+      setDataRevenue(revenueRes.data);
+      setDataTopTours(topToursRes.data);
+      setDataBookingStatus(bookingStatusRes.data);
+      setStatsOverview(statsRes.data);
+    } catch (error) {
+      setError(error.message || "Không thể tải dữ liệu");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <CircularProgress size={60} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -76,7 +116,7 @@ function Dashboard() {
                     bottom: 5,
                   }}
                 >
-                  10
+                  {statsOverview?.activeTours ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -116,7 +156,7 @@ function Dashboard() {
                     bottom: 5,
                   }}
                 >
-                  20
+                  {statsOverview?.totalBookings ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -156,7 +196,7 @@ function Dashboard() {
                     bottom: 5,
                   }}
                 >
-                  2.145
+                  {statsOverview?.totalUsers ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -191,7 +231,7 @@ function Dashboard() {
                     bottom: 5,
                   }}
                 >
-                  100.000.000
+                  {(statsOverview?.totalRevenue ?? 0).toLocaleString("vi-VN")}
                 </Typography>
               </Box>
             </Box>
@@ -203,18 +243,18 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} lg={8}>
               <RevenueChart
-                data={revenueData}
+                data={dataRevenue}
                 timeRange={timeRange}
                 onTimeRangeChange={setTimeRange}
               />
             </Grid>
 
             <Grid item xs={12} lg={4}>
-              <BookingStatusChart data={bookingStatusData} />
+              <BookingStatusChart data={dataBookingStatus} />
             </Grid>
 
             <Grid item xs={12}>
-              <TopToursChart data={topToursData} />
+              <TopToursChart data={dataTopTours} />
             </Grid>
           </Grid>
         </Box>
