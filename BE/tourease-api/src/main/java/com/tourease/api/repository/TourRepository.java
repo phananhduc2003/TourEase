@@ -71,5 +71,17 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
     @Query("SELECT DISTINCT t.transportation FROM Tour t WHERE t.availability = true AND t.transportation IS NOT NULL")
     List<String> findDistinctTransportations();
     
-   
+    /**
+     * Đếm số tour đang hoạt động (availability = true)
+     */
+    @Query("SELECT COUNT(t) FROM Tour t WHERE t.availability = true")
+    Integer countActiveTours();
+
+    /**
+     * Đếm tổng số tour
+     */
+    @Query("SELECT COUNT(t) FROM Tour t")
+    Integer countAllTours();
+    
+    
 }

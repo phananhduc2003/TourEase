@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tourease.api.DTO.CheckoutRequest;
 import com.tourease.api.DTO.CheckoutResultDTO;
+import com.tourease.api.Enum.BookingStatus;
 import com.tourease.api.Enum.PaymentStatus;
 import com.tourease.api.entity.Booking;
 import com.tourease.api.entity.Checkout;
@@ -119,8 +120,8 @@ public class CheckoutService {
                 .transportation(request.getTransportation())
                 .numAdults(request.getNumAdults())
                 .numChildren(request.getNumChildren())
-                .paymentStatus("PENDING")
-                .bookingStatus("PENDING")
+                .paymentStatus(PaymentStatus.PENDING)   
+                .bookingStatus(BookingStatus.PENDING)
                 .specialRequests(request.getSpecialRequests())
                 .contactName(request.getContactName())
                 .contactEmail(request.getContactEmail())
@@ -222,12 +223,12 @@ public class CheckoutService {
         checkout.setTransactionNo(transactionNo);
         
         Booking booking = checkout.getBooking();
-        booking.updatePaymentStatus(status.name());
+        booking.updatePaymentStatus(status);
         
         if (status == PaymentStatus.SUCCESS) {
-            booking.updateBookingStatus("CONFIRMED");
+        	 booking.updateBookingStatus(BookingStatus.CONFIRMED); 
         } else if (status == PaymentStatus.FAILED) {
-            booking.updateBookingStatus("CANCELLED");
+        	 booking.updateBookingStatus(BookingStatus.CONFIRMED); 
         }
         
         checkoutRepository.save(checkout);

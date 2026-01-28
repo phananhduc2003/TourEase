@@ -15,11 +15,9 @@ function BookingStatusChart({ data }) {
                 data={data}
                 cx="50%"
                 cy="50%"
+                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                 labelLine={false}
-                label={({ status, percent }) =>
-                  `${status} (${(percent * 100).toFixed(0)}%)`
-                }
-                outerRadius={80}
+                outerRadius={110}
                 dataKey="value"
               >
                 {data.map((entry, index) => (
@@ -41,7 +39,7 @@ function BookingStatusChart({ data }) {
                   size="small"
                   sx={{
                     bgcolor: item.color,
-                    color: "white",
+                    color: "text.primary",
                     fontWeight: "bold",
                   }}
                 />

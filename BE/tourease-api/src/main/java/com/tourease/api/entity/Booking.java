@@ -6,6 +6,8 @@ import lombok.*;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tourease.api.Enum.BookingStatus;
+import com.tourease.api.Enum.PaymentStatus;
 
 @Entity
 @Table(name = "bookings")
@@ -42,9 +44,12 @@ public class Booking {
 
     private Double  totalPrice;
 
-    private String paymentStatus;
 
-    private String bookingStatus;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;  
+
+    @Enumerated(EnumType.STRING)
+    private BookingStatus bookingStatus; 
 
     private String specialRequests;
     
@@ -79,14 +84,13 @@ public class Booking {
         return this.totalPrice;
     }
 
-    public void updatePaymentStatus(String status) {
+    public void updatePaymentStatus(PaymentStatus status) {  
         this.paymentStatus = status;
     }
 
-    public void updateBookingStatus(String status) {
+    public void updateBookingStatus(BookingStatus status) {  
         this.bookingStatus = status;
     }
-    
     // Validate thông tin liên lạc
     public boolean isContactInfoComplete() {
         return contactName != null && !contactName.trim().isEmpty() &&
