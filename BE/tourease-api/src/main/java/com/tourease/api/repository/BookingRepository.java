@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.tourease.api.DTO.ManageBookingDTO;
 import com.tourease.api.entity.Booking;
 
 
@@ -16,6 +17,9 @@ import com.tourease.api.entity.Booking;
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findByUser_UserID(Integer userId);
+    
+    
+    List<Booking> findAll();
     
     /**
      * Tính tổng doanh thu từ các booking đã thanh toán thành công
