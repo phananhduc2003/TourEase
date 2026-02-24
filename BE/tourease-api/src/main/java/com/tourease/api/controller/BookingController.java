@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tourease.api.DTO.ManageBookingDTO;
 import com.tourease.api.entity.Booking;
 import com.tourease.api.service.BookingService;
 
@@ -23,6 +24,13 @@ public class BookingController {
 	public ResponseEntity<List<Booking>> getBookingsByUser(@PathVariable Integer userID){
 		List<Booking> bookings = bookingService.getBookingsByUserId(userID);
 		return ResponseEntity.ok(bookings);
+	}
+	
+	@GetMapping("/manage-booking")
+	public ResponseEntity<List<ManageBookingDTO.BookingResponse>> getAllBookings() {
+		List<ManageBookingDTO.BookingResponse> data = bookingService.getAllBooking();
+		return ResponseEntity.ok(data);
+				
 	}
 }
 

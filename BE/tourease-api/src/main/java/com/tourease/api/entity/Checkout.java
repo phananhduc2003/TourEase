@@ -24,7 +24,7 @@ public class Checkout {
     private Booking booking;
 
     @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;     // Ví dụ: "VNPAY"
+    private PaymentMethod paymentMethod;     
 
     private LocalDateTime paymentDate;
 

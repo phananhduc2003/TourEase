@@ -37,6 +37,24 @@ const theme = extendTheme({
         sidebar: {
           menu: "#FFEFD7",
         },
+        table: {
+          header: "#1976d2", // Nền header
+          headerText: "#ffffff", // Chữ header
+          headerBorder: "#115293", // Border dưới header
+          rowOdd: "#fafafa", // Hàng lẻ
+          rowEven: "#ffffff", // Hàng chẵn
+          rowHover: "#f0f7ff", // Hover
+          rowBorder: "#e0e0e0", // Border giữa các hàng
+          idColor: "#1976d2", // Màu cột Mã #31
+          emailColor: "#666666", // Màu email
+          priceColor: "#d32f2f", // Màu tổng tiền
+          adultChipBg: "#e3f2fd", // Chip người lớn - nền
+          adultChipText: "#1976d2", // Chip người lớn - chữ
+          childChipBg: "#fff3e0", // Chip trẻ em - nền
+          childChipText: "#f57c00", // Chip trẻ em - chữ
+          footerBg: "#ffffff", // Nền footer tổng kết
+          footerText: "#666666", // Chữ footer
+        },
       },
     },
     dark: {
@@ -66,6 +84,25 @@ const theme = extendTheme({
         },
         sidebar: {
           menu: "#B0B0B0",
+        },
+
+        table: {
+          header: "#0d1f35", // Nền header navy rất đậm
+          headerText: "#7ec8e3", // Chữ header xanh sky nhạt
+          headerBorder: "#0288d1", // Border dưới header xanh dương
+          rowOdd: "#162032", // Hàng lẻ navy đậm
+          rowEven: "#1a2744", // Hàng chẵn navy nhạt hơn
+          rowHover: "#1e3a5f", // Hover xanh navy sáng
+          rowBorder: "#1e2d42", // Border mờ giữa các hàng
+          idColor: "#38bdf8", // Màu cột Mã - xanh sky
+          emailColor: "#8fa3bc", // Màu email - xanh xám
+          priceColor: "#f87171", // Màu tổng tiền - đỏ nhạt
+          adultChipBg: "#0c2a3a", // Chip người lớn - nền navy
+          adultChipText: "#38bdf8", // Chip người lớn - chữ sky
+          childChipBg: "#2d1a00", // Chip trẻ em - nền nâu đậm
+          childChipText: "#fb923c", // Chip trẻ em - chữ cam
+          footerBg: "#162032", // Nền footer
+          footerText: "#8fa3bc", // Chữ footer
         },
       },
     },

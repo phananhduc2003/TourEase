@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import PropTypes from "prop-types";
 import SidebarAdmin from "../components/sidebarAdmin/sidebarAdmin";
 import HeaderAdmin from "../components/headerAdmin/HeaderAdmin";
@@ -6,30 +6,33 @@ import HeaderAdmin from "../components/headerAdmin/HeaderAdmin";
 const wrapper = {
   width: "100%",
   display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  minHeight: "100vh",
+  height: "100vh",
+  overflow: "hidden",
 };
 
-const content = {
-  width: "100%",
-  minHeight: "calc(100vh )",
-};
 function AdminLayout({ children }) {
   return (
     <Box sx={wrapper}>
-      <Box sx={content}>
+      <SidebarAdmin />
+
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        <HeaderAdmin />
+
         <Box
           sx={{
-            display: "flex",
-            maxWidth: "100%",
+            flex: 1,
+            overflowY: "auto",
+            overflowX: "hidden",
           }}
         >
-          <SidebarAdmin />
-          <Box sx={{ flex: 1 }}>
-            <HeaderAdmin />
-            <Box> {children}</Box>
-          </Box>
+          {children}
         </Box>
       </Box>
     </Box>
@@ -39,4 +42,5 @@ function AdminLayout({ children }) {
 AdminLayout.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
 export default AdminLayout;
