@@ -105,9 +105,9 @@ public class ChatService {
             }
             
         } else {
-            // ═══════════════════════════════════════════════════════
+
             // LOẠI 3: CÂU HỎI KHÁC (chào hỏi, hỏi thông tin chung...)
-            // ═══════════════════════════════════════════════════════
+
             String prompt = String.format("""
                 Bạn là chatbot tư vấn du lịch thân thiện của TourEase.
                 Câu hỏi: "%s"

@@ -9,8 +9,11 @@ import FaceIcon from "@mui/icons-material/Face";
 import Face5Icon from "@mui/icons-material/Face5";
 import SpeedIcon from "@mui/icons-material/Speed";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
+import RecommendTours from "../components/RecommendTours/RecommendTours";
+import { useNavigate } from "react-router-dom";
 
 function InforBooking() {
+  const navigate = useNavigate();
   const { idUser: userId } = useAuth(); // Cleaner destructuring
   const [data, setData] = useState([]);
 
@@ -26,7 +29,9 @@ function InforBooking() {
     }
   }, [userId]);
 
-  console.log("data", data);
+  const handleNavigateToTour = (tourId) => {
+    navigate(`/tour-detail/${tourId}`);
+  };
 
   return (
     <Box
@@ -245,6 +250,52 @@ function InforBooking() {
           </Box>
         </Box>
       ))}
+
+      {/* Section for similar tours */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mb: 3,
+          mt: 5,
+          gap: 2,
+          width: "70%",
+        }}
+      >
+        {/* Left gradient line */}
+        <Box
+          sx={{
+            flex: 1,
+            height: "3px",
+            background: "linear-gradient(to right, transparent, #e0e0e0)",
+          }}
+        />
+
+        <Typography
+          sx={{
+            fontWeight: 800,
+            fontSize: "1.25rem",
+            color: "text.primary",
+            whiteSpace: "nowrap",
+            px: 1,
+          }}
+        >
+          ✈️ Tour tương tự
+        </Typography>
+
+        {/* Right gradient line */}
+        <Box
+          sx={{
+            flex: 1,
+            height: "3px",
+            background: "linear-gradient(to left, transparent, #e0e0e0)",
+          }}
+        />
+      </Box>
+      <RecommendTours
+        userId={userId}
+        onclickChangePage={handleNavigateToTour}
+      />
     </Box>
   );
 }

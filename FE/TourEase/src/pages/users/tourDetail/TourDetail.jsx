@@ -5,7 +5,6 @@ import {
   ListItem,
   ListItemText,
   Typography,
-  CircularProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,6 +18,8 @@ import QrCode2Icon from "@mui/icons-material/QrCode2";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import RelatedTours from "../components/RelatedTours/RelatedTours";
+import RecommendIcon from "@mui/icons-material/Recommend";
 
 function TourDetail() {
   const navigate = useNavigate();
@@ -60,6 +61,10 @@ function TourDetail() {
       console.error("Error fetching tour details:", error);
       setLoading(false);
     }
+  };
+
+  const handleNavigateToTour = (tourId) => {
+    navigate(`/tour-detail/${tourId}`);
   };
 
   const handleChooseDate = (date) => {
@@ -678,6 +683,28 @@ function TourDetail() {
               </Box>
             </Grid>
           </Grid>
+        </Box>
+        {/* recomendation tour */}
+        <Box>
+          <Typography
+            variant="h6"
+            fontWeight={"bold"}
+            sx={{ fontSize: "1.8rem", mb: 2, mt: 5 }}
+          >
+            <RecommendIcon
+              sx={{
+                verticalAlign: "middle",
+                fontSize: "2rem",
+                mr: 1,
+                color: "primary.main",
+              }}
+            />
+            Tour Liên Quan
+          </Typography>
+          <RelatedTours
+            tourId={tourId}
+            onclickChangePage={handleNavigateToTour}
+          />
         </Box>
       </Box>
     </Box>

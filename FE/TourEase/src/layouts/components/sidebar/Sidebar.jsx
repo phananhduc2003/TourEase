@@ -12,7 +12,7 @@ function Sidebar() {
     <>
       <Box
         sx={{
-          width: "356px",
+          width: "256px",
           p: " 20px 0px 26px 8px",
           ml: "-18px",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
