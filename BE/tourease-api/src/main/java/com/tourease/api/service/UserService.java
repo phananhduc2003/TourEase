@@ -1,8 +1,11 @@
 package com.tourease.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tourease.api.DTO.ManageUsersDTO;
 import com.tourease.api.DTO.ProfileUserDTO;
 import com.tourease.api.DTO.ProfileUserResponseDTO;
 import com.tourease.api.entity.User;
@@ -38,4 +41,23 @@ public class UserService {
 		return userRepository.save(user);
 				
 	}
+	
+	public List<ManageUsersDTO.UserResponse> getAllUsers() {
+		return userRepository.findAll()
+				.stream()
+				.map(u -> new ManageUsersDTO.UserResponse(
+							u.getUserID(),
+							u.getFullName(),
+							u.getUserName(),
+							u.getEmail(),
+							u.getPhoneNumber(),
+							u.getRole(),
+							u.getIsActive(),
+							u.getStatus(),
+							u.getProvider(),
+							u.getCreateDate()
+						))
+				.toList();
+	}
+	
 }
