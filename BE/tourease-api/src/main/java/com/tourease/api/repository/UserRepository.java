@@ -1,5 +1,6 @@
 package com.tourease.api.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,9 @@ import com.tourease.api.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+	
+	List<User> findAll();
+	
 	Optional<User> findByUserName(String userName);
 
 	Optional<User> findByEmail(String email);
