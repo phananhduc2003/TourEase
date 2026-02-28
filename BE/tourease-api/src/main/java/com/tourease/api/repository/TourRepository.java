@@ -17,6 +17,8 @@ import com.tourease.api.entity.Tour;
 public interface TourRepository extends JpaRepository<Tour, Integer> {
 	
 	 List<Tour> findTop25ByOrderByTourIDAsc();
+	 
+	 List<Tour> findAll();
 	
 	
 	/**
