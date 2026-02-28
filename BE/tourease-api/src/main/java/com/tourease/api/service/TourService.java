@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.tourease.api.DTO.ManageToursDTO;
+import com.tourease.api.DTO.ManageUsersDTO;
 import com.tourease.api.DTO.TourOrderedResponse;
 import com.tourease.api.entity.Tour;
 import com.tourease.api.exception.ResourceNotFoundException;
@@ -24,8 +26,26 @@ public class TourService {
 	public Optional<Tour> getTourById(Integer tourID) {
 		return tourRepository.findById( tourID );
 	}
-	
-	
+
+	public List<ManageToursDTO.TourResponse> getAllTours() {
+	    return tourRepository.findAll()
+	            .stream()
+	            .map(t -> new ManageToursDTO.TourResponse(
+	                    t.getTourID(),
+	                    t.getTourCode(),
+	                    t.getTitle(),
+	                    t.getDestination(),
+	                    t.getDepartureLocation(),
+	                    t.getDuration(),
+	                    t.getTransportation(),
+	                    t.getQuantity(),
+	                    t.getAvailability(),  
+	                    t.getPriceAdult(),     
+	                    t.getPriceChild(), 
+	                    t.getStartDates()
+	            ))
+	            .toList();
+	}
 	public TourOrderedResponse getTourOrderedInfo(Integer tourId) {
 		Tour tour = tourRepository.findById(tourId)
 				.orElseThrow(() -> new ResourceNotFoundException("khong tim tahy ID: " + tourId));

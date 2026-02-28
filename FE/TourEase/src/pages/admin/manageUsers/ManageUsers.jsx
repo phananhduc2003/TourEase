@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@mui/material/styles";
 import { ApiGetManageUsers } from "../../../api/admin/ApiGetManageUsers";
 import { useEffect, useState, useMemo } from "react";
@@ -123,28 +123,6 @@ function ManageUsers() {
 
   const getRoleChipSx = (role) => {
     const s = isDark ? ROLE_STYLE[role] : ROLE_STYLE_LIGHT[role];
-    if (!s)
-      return {
-        fontWeight: "700",
-        minWidth: "100px",
-        height: "26px",
-        fontSize: "12px",
-      };
-    return {
-      fontWeight: "700",
-      minWidth: "100px",
-      height: "26px",
-      fontSize: "12px",
-      backgroundColor: s.bg,
-      color: s.text,
-      border: `1px solid ${s.border}`,
-    };
-  };
-
-  const getActiveChipSx = (status) => {
-    const s = isDark
-      ? ACTIVE_STATUS_STYLE[status]
-      : ACTIVE_STATUS_STYLE_LIGHT[status];
     if (!s)
       return {
         fontWeight: "700",
@@ -306,9 +284,7 @@ function ManageUsers() {
                 <TableCell sx={{ minWidth: "180px" }}>Email</TableCell>
                 <TableCell sx={{ minWidth: "120px" }}>Số ĐT</TableCell>
                 <TableCell sx={{ minWidth: "100px" }}>Vai trò</TableCell>
-                <TableCell align="center" sx={{ minWidth: "110px" }}>
-                  Hoạt động
-                </TableCell>
+
                 <TableCell align="center" sx={{ minWidth: "110px" }}>
                   Trạng thái
                 </TableCell>
@@ -396,16 +372,6 @@ function ManageUsers() {
 
                     <TableCell align="center">
                       <Chip
-                        label={
-                          ACTIVE_STATUS_LABEL[user.isActive] ?? user.isActive
-                        }
-                        size="small"
-                        sx={getActiveChipSx(user.isActive)}
-                      />
-                    </TableCell>
-
-                    <TableCell align="center">
-                      <Chip
                         label={USER_STATUS_LABEL[user.status] ?? user.status}
                         size="small"
                         sx={getUserStatusChipSx(user.status)}
@@ -434,9 +400,9 @@ function ManageUsers() {
                       >
                         <Button
                           variant="contained"
-                          color="warning"
+                          color="error"
                           size="small"
-                          startIcon={<EditIcon sx={{ fontSize: "16px" }} />}
+                          startIcon={<DeleteIcon sx={{ fontSize: "16px" }} />}
                           sx={{
                             minWidth: "70px",
                             textTransform: "none",
@@ -450,7 +416,7 @@ function ManageUsers() {
                             },
                           }}
                         >
-                          Sửa
+                          Xóa
                         </Button>
                       </Box>
                     </TableCell>

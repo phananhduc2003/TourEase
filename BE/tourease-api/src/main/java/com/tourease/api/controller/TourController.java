@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tourease.api.DTO.ManageToursDTO;
 import com.tourease.api.DTO.TourOrderedResponse;
 import com.tourease.api.DTO.TourPageResponse;
 import com.tourease.api.entity.Tour;
@@ -125,5 +126,7 @@ public class TourController {
 		List<String> transportations = tourService.getAvailableTransportation();
 		return ResponseEntity.ok(transportations);
 	}
+	
+	
 	
 }
