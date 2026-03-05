@@ -68,21 +68,18 @@ function AuthProvider({ children }) {
     } catch (error) {
       let errorMsg = "Login failed. Please check your username and password.";
       if (error.response) {
-        // Xử lý lỗi từ server (ví dụ: 401)
         if (error.response.status === 401) {
-          errorMsg = error.response.data || "Invalid credentials.";
+          errorMsg = error.response.data?.message || "Invalid credentials.";
         } else if (error.response.status === 400) {
-          errorMsg = error.response.data || "Bad request.";
+          errorMsg = error.response.data?.message || "Bad request.";
         }
       } else if (error.request) {
-        // Lỗi không nhận được phản hồi từ server
         errorMsg = "Unable to connect to the server. Please try again later.";
       } else {
-        // Lỗi trong quá trình thiết lập yêu cầu
         errorMsg = "An unexpected error occurred.";
       }
       console.error("Login error:", error.message);
-      setErrorMessage(errorMsg); // Lưu thông báo lỗi để hiển thị
+      setErrorMessage(errorMsg);
       setAuthenticated(false);
       setUserRole(null);
       setIdUser(null);

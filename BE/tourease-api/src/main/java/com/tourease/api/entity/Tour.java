@@ -24,8 +24,11 @@ public class Tour {
     @Column(columnDefinition = "TEXT")
     private String description;
     
-    @ElementCollection
-    @CollectionTable(name = "tour_images")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+        name = "tour_images",
+        joinColumns = @JoinColumn(name = "tour_tourid")  
+    )
     @Column(name = "image_url")
     private List<String> images;
     

@@ -21,6 +21,7 @@ import ManageUsers from "../pages/admin/manageUsers/ManageUsers";
 import ManageBookings from "../pages/admin/manageBookings/ManageBooking";
 import ManageAdmin from "../pages/admin/manageAdmin/ManageAdmin";
 import ManageTours from "../pages/admin/manageTours/ManageTours";
+import RetrieveTours from "../pages/admin/components/retrieveTour/retrieveTours";
 
 const defaultRoutes = [
   { path: config.routes.home, component: HomePage },
@@ -77,6 +78,12 @@ const adminRoutes = [
   {
     path: config.routes.managebookings,
     component: ManageBookings,
+    layout: AdminLayout,
+  },
+
+  {
+    path: config.routes.retrieveTours,
+    component: RetrieveTours,
     layout: AdminLayout,
   },
 ];

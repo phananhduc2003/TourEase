@@ -46,19 +46,27 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/public/**","/api/checkout/**").permitAll()
+                        
+                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+
+                        
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                       
+                        .requestMatchers("/api/auth/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
-                	    .userInfoEndpoint(userInfo -> userInfo
-                	        .userService(customOAuth2UserService)
-                	    )
-                	    .successHandler(customOAuth2SuccessHandler))
+                        .userInfoEndpoint(userInfo -> userInfo
+                            .userService(customOAuth2UserService)
+                        )
+                        .successHandler(customOAuth2SuccessHandler))
                 .build();
-        		
     }
 
     @Bean
