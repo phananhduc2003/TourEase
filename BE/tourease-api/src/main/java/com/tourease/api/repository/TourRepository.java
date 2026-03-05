@@ -19,7 +19,23 @@ public interface TourRepository extends JpaRepository<Tour, Integer> {
 	 List<Tour> findTop25ByOrderByTourIDAsc();
 	 
 	 List<Tour> findAll();
-	
+	 
+	 @Query("SELECT DISTINCT t FROM Tour t " +
+		       "LEFT JOIN FETCH t.images " +
+		       "WHERE t.tourID = :tourID")
+		Optional<Tour> findByIdWithImages(@Param("tourID") Integer tourID);
+
+		// Query 2: fetch startDates
+		@Query("SELECT DISTINCT t FROM Tour t " +
+		       "LEFT JOIN FETCH t.startDates " +
+		       "WHERE t.tourID = :tourID")
+		Optional<Tour> findByIdWithStartDates(@Param("tourID") Integer tourID);
+
+		// Query 3: fetch itineraryDays
+		@Query("SELECT DISTINCT t FROM Tour t " +
+		       "LEFT JOIN FETCH t.itineraryDays " +
+		       "WHERE t.tourID = :tourID")
+		Optional<Tour> findByIdWithItineraryDays(@Param("tourID") Integer tourID);
 	
 	/**
      * Alternative: Lấy ra tours mới nhất

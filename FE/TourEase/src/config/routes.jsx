@@ -16,6 +16,7 @@ const routes = {
   managetours: "/manage-tours",
   manageusers: "/manage-users",
   managebookings: "/manage-bookings",
+  retrieveTours: "/retrieve-tours/:status",
 };
 
 export default routes;

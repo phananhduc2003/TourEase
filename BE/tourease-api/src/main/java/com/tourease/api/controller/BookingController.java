@@ -26,12 +26,6 @@ public class BookingController {
 		return ResponseEntity.ok(bookings);
 	}
 	
-	@GetMapping("/manage-booking")
-	public ResponseEntity<List<ManageBookingDTO.BookingResponse>> getAllBookings() {
-		List<ManageBookingDTO.BookingResponse> data = bookingService.getAllBooking();
-		return ResponseEntity.ok(data);
-				
-	}
 }
 
 

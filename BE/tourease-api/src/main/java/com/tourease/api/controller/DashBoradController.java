@@ -16,7 +16,7 @@ import com.tourease.api.service.DashBoradService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/auth/dashboard")
+@RequestMapping("/api/admin/dashboard")
 @CrossOrigin(origins = "*")
 
 public class DashBoradController {
