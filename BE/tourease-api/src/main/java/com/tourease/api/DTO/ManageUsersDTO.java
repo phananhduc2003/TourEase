@@ -33,4 +33,11 @@ public class ManageUsersDTO {
 		    private LocalDateTime createDate;
 		   
 	}
+	
+	@Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateStatusRequest {
+        private UserStatus status; 
+    }
 }

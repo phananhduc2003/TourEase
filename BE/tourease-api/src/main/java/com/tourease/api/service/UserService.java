@@ -9,6 +9,7 @@ import com.tourease.api.DTO.ManageUsersDTO;
 import com.tourease.api.DTO.ProfileUserDTO;
 import com.tourease.api.DTO.ProfileUserResponseDTO;
 import com.tourease.api.entity.User;
+import com.tourease.api.entity.User.UserStatus;
 import com.tourease.api.repository.UserRepository;
 
 @Service
@@ -59,5 +60,44 @@ public class UserService {
 						))
 				.toList();
 	}
+	
+	public void deleteUser(Integer userID) {
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userID));
+
+      
+        if (user.getRole() == User.Role.ADMIN) {
+            throw new RuntimeException("Cannot delete ADMIN account");
+        }
+
+        userRepository.delete(user);
+    }
+
+
+    public ManageUsersDTO.UserResponse updateUserStatus(Integer userID, UserStatus newStatus) {
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userID));
+
+        
+        if (user.getRole() == User.Role.ADMIN) {
+            throw new RuntimeException("Cannot block ADMIN account");
+        }
+
+        user.setStatus(newStatus);
+        User saved = userRepository.save(user);
+
+        return new ManageUsersDTO.UserResponse(
+                saved.getUserID(),
+                saved.getFullName(),
+                saved.getUserName(),
+                saved.getEmail(),
+                saved.getPhoneNumber(),
+                saved.getRole(),
+                saved.getIsActive(),
+                saved.getStatus(),
+                saved.getProvider(),
+                saved.getCreateDate()
+        );
+    }
 	
 }

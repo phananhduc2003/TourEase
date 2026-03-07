@@ -1,4 +1,4 @@
-package com.tourease.api.controller;
+	package com.tourease.api.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +18,19 @@ public class AdminUserController {
     @GetMapping
     public ResponseEntity<List<ManageUsersDTO.UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+    
+    @DeleteMapping("/{userID}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer userID) {
+        userService.deleteUser(userID);
+        return ResponseEntity.noContent().build(); 
+    }
+
+
+    @PatchMapping("/{userID}/status")
+    public ResponseEntity<ManageUsersDTO.UserResponse> updateUserStatus(
+            @PathVariable Integer userID,
+            @RequestBody ManageUsersDTO.UpdateStatusRequest request) {
+        return ResponseEntity.ok(userService.updateUserStatus(userID, request.getStatus()));
     }
 }
