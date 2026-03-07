@@ -12,21 +12,26 @@ import {
   Chip,
   CircularProgress,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
+import BlockIcon from "@mui/icons-material/Block";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { useTheme } from "@mui/material/styles";
 import { ApiGetManageUsers } from "../../../api/admin/ApiGetManageUsers";
+import { ApiDeleteUser } from "../../../api/admin/ApiDeleteUser";
+import { ApiToggleBlockUser } from "../../../api/admin/ApiToggleBlockUser";
 import { useEffect, useState, useMemo } from "react";
 
 const ROLE_LABEL = {
   USER: "Người dùng",
   ADMIN: "Quản trị viên",
-};
-
-const ACTIVE_STATUS_LABEL = {
-  Y: "Hoạt động",
-  N: "Không hoạt động",
 };
 
 const USER_STATUS_LABEL = {
@@ -60,16 +65,6 @@ const ROLE_STYLE_LIGHT = {
   USER: { bg: "#e0f2fe", text: "#075985", border: "#bae6fd" },
 };
 
-const ACTIVE_STATUS_STYLE = {
-  Y: { bg: "#0d3321", text: "#4ade80", border: "#166534" },
-  N: { bg: "#3a0a0a", text: "#f87171", border: "#7f1d1d" },
-};
-
-const ACTIVE_STATUS_STYLE_LIGHT = {
-  Y: { bg: "#dcfce7", text: "#166534", border: "#bbf7d0" },
-  N: { bg: "#fee2e2", text: "#991b1b", border: "#fecaca" },
-};
-
 const USER_STATUS_STYLE = {
   D: { bg: "#0d3321", text: "#4ade80", border: "#166534" },
   B: { bg: "#3a0a0a", text: "#f87171", border: "#7f1d1d" },
@@ -80,6 +75,94 @@ const USER_STATUS_STYLE_LIGHT = {
   B: { bg: "#fee2e2", text: "#991b1b", border: "#fecaca" },
 };
 
+// ── Confirm Dialog Component ───────────────────────────────────────────────────
+function ConfirmDialog({
+  open,
+  onClose,
+  onConfirm,
+  title,
+  description,
+  confirmLabel,
+  confirmColor,
+  loading,
+}) {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          minWidth: "360px",
+          boxShadow: "0px 20px 60px rgba(0,0,0,0.2)",
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          fontWeight: "700",
+          fontSize: "16px",
+          pb: 1,
+        }}
+      >
+        <WarningAmberIcon
+          sx={{
+            color: confirmColor === "error" ? "#ef4444" : "#f59e0b",
+            fontSize: "22px",
+          }}
+        />
+        {title}
+      </DialogTitle>
+
+      <DialogContent sx={{ pt: 0 }}>
+        <DialogContentText sx={{ fontSize: "14px", color: "text.secondary" }}>
+          {description}
+        </DialogContentText>
+      </DialogContent>
+
+      <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
+        <Button
+          onClick={onClose}
+          disabled={loading}
+          variant="outlined"
+          size="small"
+          sx={{
+            textTransform: "none",
+            fontWeight: "600",
+            borderRadius: 2,
+            minWidth: "80px",
+          }}
+        >
+          Hủy
+        </Button>
+        <Button
+          onClick={onConfirm}
+          disabled={loading}
+          variant="contained"
+          color={confirmColor}
+          size="small"
+          sx={{
+            textTransform: "none",
+            fontWeight: "600",
+            borderRadius: 2,
+            minWidth: "80px",
+          }}
+        >
+          {loading ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : (
+            confirmLabel
+          )}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+// ── Main Component ─────────────────────────────────────────────────────────────
 function ManageUsers() {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
@@ -89,6 +172,11 @@ function ManageUsers() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
+
+  // Dialog state
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, user: null });
+  const [blockDialog, setBlockDialog] = useState({ open: false, user: null });
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     handleGetManageUsers();
@@ -108,6 +196,53 @@ function ManageUsers() {
     }
   };
 
+  // ── Delete ──────────────────────────────────────────────────────────────────
+  const openDeleteDialog = (user) => {
+    setDeleteDialog({ open: true, user });
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteDialog.user) return;
+    setActionLoading(true);
+    try {
+      await ApiDeleteUser(deleteDialog.user.userID);
+      setData((prev) =>
+        prev.filter((u) => u.userID !== deleteDialog.user.userID),
+      );
+      setDeleteDialog({ open: false, user: null });
+    } catch (err) {
+      console.error("Error deleting user:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // ── Block / Unblock ─────────────────────────────────────────────────────────
+  const openBlockDialog = (user) => {
+    setBlockDialog({ open: true, user });
+  };
+
+  const handleBlockConfirm = async () => {
+    if (!blockDialog.user) return;
+    const targetUser = blockDialog.user;
+    const newStatus = targetUser.status === "B" ? "D" : "B";
+    setActionLoading(true);
+    try {
+      await ApiToggleBlockUser(targetUser.userID, newStatus);
+      setData((prev) =>
+        prev.map((u) =>
+          u.userID === targetUser.userID ? { ...u, status: newStatus } : u,
+        ),
+      );
+      setBlockDialog({ open: false, user: null });
+    } catch (err) {
+      console.error("Error toggling block user:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // ── Filter ──────────────────────────────────────────────────────────────────
   const filteredData = useMemo(() => {
     if (!searchText.trim()) return data;
     const keyword = searchText.toLowerCase();
@@ -121,6 +256,7 @@ function ManageUsers() {
     );
   }, [data, searchText]);
 
+  // ── Chip styles ─────────────────────────────────────────────────────────────
   const getRoleChipSx = (role) => {
     const s = isDark ? ROLE_STYLE[role] : ROLE_STYLE_LIGHT[role];
     if (!s)
@@ -163,6 +299,7 @@ function ManageUsers() {
     };
   };
 
+  // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <Box
       sx={{
@@ -174,6 +311,7 @@ function ManageUsers() {
         minHeight: "100%",
       }}
     >
+      {/* Header */}
       <Box
         sx={{
           display: "flex",
@@ -284,13 +422,12 @@ function ManageUsers() {
                 <TableCell sx={{ minWidth: "180px" }}>Email</TableCell>
                 <TableCell sx={{ minWidth: "120px" }}>Số ĐT</TableCell>
                 <TableCell sx={{ minWidth: "100px" }}>Vai trò</TableCell>
-
                 <TableCell align="center" sx={{ minWidth: "110px" }}>
                   Trạng thái
                 </TableCell>
                 <TableCell sx={{ minWidth: "120px" }}>Nhà cung cấp</TableCell>
                 <TableCell sx={{ minWidth: "110px" }}>Ngày tạo</TableCell>
-                <TableCell align="center" sx={{ minWidth: "120px" }}>
+                <TableCell align="center" sx={{ minWidth: "170px" }}>
                   Thao tác
                 </TableCell>
               </TableRow>
@@ -299,7 +436,7 @@ function ManageUsers() {
               {filteredData.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={11}
+                    colSpan={10}
                     align="center"
                     sx={{ py: 5, color: "text.secondary" }}
                   >
@@ -390,6 +527,7 @@ function ManageUsers() {
                       {formatDate(user.createDate)}
                     </TableCell>
 
+                    {/* ── Action Buttons ── */}
                     <TableCell align="center">
                       <Box
                         sx={{
@@ -398,11 +536,79 @@ function ManageUsers() {
                           justifyContent: "center",
                         }}
                       >
+                        {/* Block / Unblock */}
+                        <Button
+                          variant="contained"
+                          size="small"
+                          disabled={user.role === "ADMIN"}
+                          onClick={() => openBlockDialog(user)}
+                          startIcon={
+                            user.status === "B" ? (
+                              <LockOpenIcon sx={{ fontSize: "15px" }} />
+                            ) : (
+                              <BlockIcon sx={{ fontSize: "15px" }} />
+                            )
+                          }
+                          sx={{
+                            minWidth: "85px",
+                            textTransform: "none",
+                            fontWeight: "600",
+                            fontSize: "12px",
+                            py: 0.5,
+                            whiteSpace: "nowrap",
+                            backgroundColor:
+                              user.status === "B"
+                                ? isDark
+                                  ? "#1a3a2a"
+                                  : "#dcfce7"
+                                : isDark
+                                  ? "#3a2800"
+                                  : "#fef3c7",
+                            color:
+                              user.status === "B"
+                                ? isDark
+                                  ? "#4ade80"
+                                  : "#166534"
+                                : isDark
+                                  ? "#fbbf24"
+                                  : "#92400e",
+                            border: `1px solid ${
+                              user.status === "B"
+                                ? isDark
+                                  ? "#166534"
+                                  : "#bbf7d0"
+                                : isDark
+                                  ? "#78350f"
+                                  : "#fde68a"
+                            }`,
+                            boxShadow: "none",
+                            "&:hover": {
+                              boxShadow: "0px 2px 6px rgba(0,0,0,0.12)",
+                              backgroundColor:
+                                user.status === "B"
+                                  ? isDark
+                                    ? "#22472e"
+                                    : "#bbf7d0"
+                                  : isDark
+                                    ? "#4a3500"
+                                    : "#fde68a",
+                            },
+                            "&.Mui-disabled": {
+                              opacity: 0.35,
+                            },
+                          }}
+                        >
+                          {user.status === "B" ? "Bỏ chặn" : "Chặn"}
+                        </Button>
+
+                        {/* Delete */}
                         <Button
                           variant="contained"
                           color="error"
                           size="small"
-                          startIcon={<DeleteIcon sx={{ fontSize: "16px" }} />}
+                          disabled={user.role === "ADMIN"}
+                          onClick={() => openDeleteDialog(user)}
+                          startIcon={<DeleteIcon sx={{ fontSize: "15px" }} />}
                           sx={{
                             minWidth: "70px",
                             textTransform: "none",
@@ -413,6 +619,9 @@ function ManageUsers() {
                             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                             "&:hover": {
                               boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)",
+                            },
+                            "&.Mui-disabled": {
+                              opacity: 0.35,
                             },
                           }}
                         >
@@ -462,6 +671,48 @@ function ManageUsers() {
           </Box>
         </Box>
       )}
+
+      {/* ── Delete Confirm Dialog ── */}
+      <ConfirmDialog
+        open={deleteDialog.open}
+        onClose={() =>
+          !actionLoading && setDeleteDialog({ open: false, user: null })
+        }
+        onConfirm={handleDeleteConfirm}
+        loading={actionLoading}
+        confirmColor="error"
+        confirmLabel="Xóa"
+        title="Xác nhận xóa người dùng"
+        description={
+          deleteDialog.user
+            ? `Bạn có chắc muốn xóa tài khoản "${deleteDialog.user.fullName || deleteDialog.user.userName}" không? Hành động này không thể hoàn tác.`
+            : ""
+        }
+      />
+
+      {/* ── Block / Unblock Confirm Dialog ── */}
+      <ConfirmDialog
+        open={blockDialog.open}
+        onClose={() =>
+          !actionLoading && setBlockDialog({ open: false, user: null })
+        }
+        onConfirm={handleBlockConfirm}
+        loading={actionLoading}
+        confirmColor={blockDialog.user?.status === "B" ? "success" : "warning"}
+        confirmLabel={blockDialog.user?.status === "B" ? "Bỏ chặn" : "Chặn"}
+        title={
+          blockDialog.user?.status === "B"
+            ? "Xác nhận bỏ chặn người dùng"
+            : "Xác nhận chặn người dùng"
+        }
+        description={
+          blockDialog.user
+            ? blockDialog.user.status === "B"
+              ? `Bạn có muốn bỏ chặn tài khoản "${blockDialog.user.fullName || blockDialog.user.userName}"? Người dùng sẽ có thể đăng nhập lại.`
+              : `Bạn có muốn chặn tài khoản "${blockDialog.user.fullName || blockDialog.user.userName}"? Người dùng sẽ không thể đăng nhập.`
+            : ""
+        }
+      />
     </Box>
   );
 }
