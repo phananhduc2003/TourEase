@@ -42,4 +42,13 @@ public class ManageBookingDTO {
 	    
 	    private PaymentMethod paymentMethod; 
 	}
+	
+	@Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateStatusRequest {
+        private BookingStatus bookingStatus;   
+        private PaymentStatus paymentStatus;   
+    }
+	
 }

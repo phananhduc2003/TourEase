@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import DarkMode from "../../../theme/DarkMode";
 import EmailIcon from "@mui/icons-material/Email";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useAuth } from "../../../context/AuthContext";
 
 const wrapper = {
   display: "flex",
@@ -17,6 +18,12 @@ const wrapper = {
 };
 
 function HeaderAdmin() {
+  const { Logout } = useAuth();
+
+  const handleLogout = () => {
+    Logout();
+  };
+
   return (
     <>
       <Box sx={wrapper}>
@@ -47,6 +54,7 @@ function HeaderAdmin() {
               >
                 <Grid item sx={{ position: "relative" }}>
                   <AccountCircleIcon
+                    onClick={handleLogout}
                     sx={{
                       position: "absolute",
                       left: -20,

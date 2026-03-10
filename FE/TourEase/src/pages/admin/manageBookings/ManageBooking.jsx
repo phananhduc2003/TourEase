@@ -12,12 +12,26 @@ import {
   Chip,
   CircularProgress,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Divider,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
 import { useTheme } from "@mui/material/styles";
 import { ApiGetManageBookings } from "../../../api/admin/ApiGetManageBookings";
+import { ApiBookingStatus } from "../../../api/admin/ApiBookingStatus";
 import { useEffect, useState, useMemo } from "react";
+
+// ===================== CONSTANTS =====================
 
 const BOOKING_STATUS_LABEL = {
   PENDING: "Chờ xử lý",
@@ -41,18 +55,26 @@ const PAYMENT_METHOD_LABEL = {
   MOMO: "MoMo",
 };
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(amount);
-};
+const BOOKING_STATUS_OPTIONS = [
+  "PENDING",
+  "CONFIRMED",
+  "COMPLETED",
+  "CANCELLED",
+];
+const PAYMENT_STATUS_OPTIONS = ["PENDING", "SUCCESS", "FAILED", "REFUNDED"];
+
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
+    amount,
+  );
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "-";
   const [year, month, day] = dateStr.split("-");
   return `${day}/${month}/${year}`;
 };
+
+// ===================== CHIP STYLES =====================
 
 const BOOKING_STATUS_STYLE = {
   CONFIRMED: { bg: "#0d3321", text: "#4ade80", border: "#166534" },
@@ -80,16 +102,175 @@ const PAYMENT_STATUS_STYLE_LIGHT = {
   REFUNDED: { bg: "#e0f2fe", text: "#075985", border: "#bae6fd" },
 };
 
+// ===================== UPDATE STATUS MODAL =====================
+
+function UpdateStatusModal({ open, booking, onClose, onSaved }) {
+  const [bookingStatus, setBookingStatus] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Sync khi mở modal
+  useEffect(() => {
+    if (booking) {
+      setBookingStatus(booking.bookingStatus ?? "");
+      setPaymentStatus(booking.paymentStatus ?? "");
+      setError(null);
+    }
+  }, [booking]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setError(null);
+    try {
+      const response = await ApiBookingStatus(
+        booking.bookingID,
+        bookingStatus || null,
+        paymentStatus || null,
+      );
+      onSaved(response.data); // trả updated booking về parent
+      onClose();
+    } catch (err) {
+      console.error("Update status error:", err);
+      setError("Cập nhật thất bại. Vui lòng thử lại.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const hasChange =
+    booking &&
+    (bookingStatus !== (booking.bookingStatus ?? "") ||
+      paymentStatus !== (booking.paymentStatus ?? ""));
+
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          pb: 1,
+          fontWeight: "bold",
+        }}
+      >
+        <Box>
+          Cập nhật trạng thái
+          {booking && (
+            <Typography
+              component="span"
+              sx={{
+                ml: 1,
+                fontSize: "13px",
+                color: "text.secondary",
+                fontWeight: 400,
+              }}
+            >
+              #{booking.bookingID}
+            </Typography>
+          )}
+        </Box>
+        <Button
+          onClick={onClose}
+          size="small"
+          sx={{ minWidth: 0, p: 0.5, color: "text.secondary" }}
+        >
+          <CloseIcon fontSize="small" />
+        </Button>
+      </DialogTitle>
+
+      <Divider />
+
+      <DialogContent sx={{ pt: 2.5, pb: 1 }}>
+        {booking && (
+          <Typography sx={{ mb: 2, fontSize: "13px", color: "text.secondary" }}>
+            Khách hàng:{" "}
+            <strong style={{ color: "inherit" }}>{booking.contactName}</strong>
+          </Typography>
+        )}
+
+        <FormControl fullWidth size="small" sx={{ mb: 2.5 }}>
+          <InputLabel>Trạng thái booking</InputLabel>
+          <Select
+            value={bookingStatus}
+            label="Trạng thái booking"
+            onChange={(e) => setBookingStatus(e.target.value)}
+          >
+            {BOOKING_STATUS_OPTIONS.map((s) => (
+              <MenuItem key={s} value={s}>
+                {BOOKING_STATUS_LABEL[s]}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth size="small">
+          <InputLabel>Trạng thái thanh toán</InputLabel>
+          <Select
+            value={paymentStatus}
+            label="Trạng thái thanh toán"
+            onChange={(e) => setPaymentStatus(e.target.value)}
+          >
+            {PAYMENT_STATUS_OPTIONS.map((s) => (
+              <MenuItem key={s} value={s}>
+                {PAYMENT_STATUS_LABEL[s]}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {error && (
+          <Typography color="error" sx={{ mt: 1.5, fontSize: "13px" }}>
+            {error}
+          </Typography>
+        )}
+      </DialogContent>
+
+      <DialogActions sx={{ px: 3, pb: 2.5, pt: 1 }}>
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          size="small"
+          color="inherit"
+        >
+          Huỷ
+        </Button>
+        <Button
+          onClick={handleSave}
+          variant="contained"
+          size="small"
+          color="warning"
+          disabled={!hasChange || saving}
+          startIcon={
+            saving ? (
+              <CircularProgress size={14} color="inherit" />
+            ) : (
+              <SaveIcon fontSize="small" />
+            )
+          }
+        >
+          {saving ? "Đang lưu..." : "Lưu"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+// ===================== MAIN COMPONENT =====================
+
 function ManageBookings() {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
-
   const t = theme.palette.table;
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
+
+  // Modal state
+  const [editBooking, setEditBooking] = useState(null); // booking đang edit
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     handleGetManageBookings();
@@ -107,6 +288,27 @@ function ManageBookings() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOpenEdit = (booking) => {
+    setEditBooking(booking);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setEditBooking(null);
+  };
+
+  // Sau khi lưu thành công, cập nhật lại 1 row trong data (không refetch toàn bộ)
+  const handleSaved = (updatedBooking) => {
+    setData((prev) =>
+      prev.map((b) =>
+        b.bookingID === updatedBooking.bookingID
+          ? { ...b, ...updatedBooking }
+          : b,
+      ),
+    );
   };
 
   const filteredData = useMemo(() => {
@@ -164,6 +366,7 @@ function ManageBookings() {
         minHeight: "100%",
       }}
     >
+      {/* Header */}
       <Box
         sx={{
           display: "flex",
@@ -191,7 +394,7 @@ function ManageBookings() {
             alignItems: "center",
             backgroundColor: "background.paper",
             borderRadius: 2,
-            boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
             overflow: "hidden",
             width: { xs: "100%", sm: "300px" },
           }}
@@ -225,12 +428,14 @@ function ManageBookings() {
         </Box>
       </Box>
 
+      {/* Loading */}
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
           <CircularProgress />
         </Box>
       )}
 
+      {/* Error */}
       {error && !loading && (
         <Box sx={{ textAlign: "center", py: 4 }}>
           <Typography color="error" mb={2}>
@@ -242,11 +447,12 @@ function ManageBookings() {
         </Box>
       )}
 
+      {/* Table */}
       {!loading && !error && (
         <TableContainer
           component={Paper}
           sx={{
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.08)",
+            boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
             borderRadius: 2,
             overflowX: "auto",
             width: "100%",
@@ -295,6 +501,7 @@ function ManageBookings() {
                 </TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {filteredData.length === 0 ? (
                 <TableRow>
@@ -327,7 +534,6 @@ function ManageBookings() {
                     <TableCell sx={{ fontWeight: "700", color: t.idColor }}>
                       #{booking.bookingID}
                     </TableCell>
-
                     <TableCell
                       sx={{
                         fontWeight: "600",
@@ -337,11 +543,9 @@ function ManageBookings() {
                     >
                       {booking.contactName}
                     </TableCell>
-
                     <TableCell sx={{ color: t.emailColor }}>
                       {booking.contactEmail}
                     </TableCell>
-
                     <TableCell
                       sx={{
                         fontFamily: "monospace",
@@ -351,19 +555,16 @@ function ManageBookings() {
                     >
                       {booking.contactPhone}
                     </TableCell>
-
                     <TableCell
                       sx={{ fontSize: "12px", color: "text.secondary" }}
                     >
                       {booking.contactAddress}
                     </TableCell>
-
                     <TableCell
                       sx={{ whiteSpace: "nowrap", color: "text.primary" }}
                     >
                       {formatDate(booking.bookingDate)}
                     </TableCell>
-
                     <TableCell align="center">
                       <Chip
                         label={booking.numAdults}
@@ -373,11 +574,10 @@ function ManageBookings() {
                           color: t.adultChipText,
                           fontWeight: "700",
                           height: "24px",
-                          border: isDark ? `1px solid #0369a1` : "none",
+                          border: isDark ? "1px solid #0369a1" : "none",
                         }}
                       />
                     </TableCell>
-
                     <TableCell align="center">
                       <Chip
                         label={booking.numChildren}
@@ -387,11 +587,10 @@ function ManageBookings() {
                           color: t.childChipText,
                           fontWeight: "700",
                           height: "24px",
-                          border: isDark ? `1px solid #7c2d12` : "none",
+                          border: isDark ? "1px solid #7c2d12" : "none",
                         }}
                       />
                     </TableCell>
-
                     <TableCell
                       align="right"
                       sx={{
@@ -402,7 +601,6 @@ function ManageBookings() {
                     >
                       {formatCurrency(booking.totalPrice)}
                     </TableCell>
-
                     <TableCell align="center">
                       <Chip
                         label={
@@ -413,7 +611,6 @@ function ManageBookings() {
                         sx={getBookingChipSx(booking.bookingStatus)}
                       />
                     </TableCell>
-
                     <TableCell
                       sx={{ whiteSpace: "nowrap", color: "text.primary" }}
                     >
@@ -421,7 +618,6 @@ function ManageBookings() {
                         booking.paymentMethod ??
                         "-"}
                     </TableCell>
-
                     <TableCell align="center">
                       <Chip
                         label={
@@ -433,12 +629,14 @@ function ManageBookings() {
                       />
                     </TableCell>
 
+                    {/* ---- NÚT SỬA -> mở modal ---- */}
                     <TableCell align="center">
                       <Button
                         variant="contained"
                         color="warning"
                         size="small"
                         startIcon={<EditIcon sx={{ fontSize: "16px" }} />}
+                        onClick={() => handleOpenEdit(booking)}
                         sx={{
                           minWidth: "75px",
                           textTransform: "none",
@@ -446,9 +644,9 @@ function ManageBookings() {
                           fontSize: "12px",
                           py: 0.5,
                           whiteSpace: "nowrap",
-                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
                           "&:hover": {
-                            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)",
+                            boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
                           },
                         }}
                       >
@@ -463,6 +661,7 @@ function ManageBookings() {
         </TableContainer>
       )}
 
+      {/* Footer */}
       {!loading && !error && (
         <Box
           sx={{
@@ -473,20 +672,18 @@ function ManageBookings() {
             p: 2,
             backgroundColor: t.footerBg,
             borderRadius: 2,
-            boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.08)",
+            boxShadow: "0px 2px 8px rgba(0,0,0,0.08)",
             flexWrap: "wrap",
             gap: 1,
           }}
         >
           <Box sx={{ color: t.footerText, fontSize: "13px" }}>
-            {" "}
             Tổng số bookings:{" "}
             <strong style={{ color: theme.palette.text.primary }}>
               {data.length}
             </strong>
           </Box>
           <Box sx={{ color: t.footerText, fontSize: "13px" }}>
-            {" "}
             Hiển thị{" "}
             <strong style={{ color: theme.palette.text.primary }}>
               {filteredData.length}
@@ -499,6 +696,14 @@ function ManageBookings() {
           </Box>
         </Box>
       )}
+
+      {/* UPDATE STATUS MODAL */}
+      <UpdateStatusModal
+        open={modalOpen}
+        booking={editBooking}
+        onClose={handleCloseModal}
+        onSaved={handleSaved}
+      />
     </Box>
   );
 }
