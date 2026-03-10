@@ -47,11 +47,7 @@ function SidebarAdmin() {
 
         <Menu>
           <MenuItem title="Dashboard" to="/dashboard" icon={<SpeedIcon />} />
-          <MenuItem
-            title="Quản lý admin"
-            to="/manage-admin"
-            icon={<AssessmentIcon />}
-          />
+
           <MenuItem
             title="Quản lý tour"
             to="/manage-tours"

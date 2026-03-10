@@ -40,4 +40,39 @@ public class BookingService {
 	            .toList();
 	    			
 	}
+	
+	 public ManageBookingDTO.BookingResponse updateBookingStatus(
+	            Integer id, ManageBookingDTO.UpdateStatusRequest request) {
+
+	        Booking booking = bookingRepository.findById(id)
+	                .orElseThrow(() -> new RuntimeException("Booking not found: " + id));
+
+	        if (request.getBookingStatus() != null) {
+	            booking.updateBookingStatus(request.getBookingStatus());
+	        }
+	        if (request.getPaymentStatus() != null) {
+	            booking.updatePaymentStatus(request.getPaymentStatus());
+	        }
+
+	        bookingRepository.save(booking);
+	        return toBookingResponse(booking);
+	    }
+
+	    private ManageBookingDTO.BookingResponse toBookingResponse(Booking b) {
+	        return new ManageBookingDTO.BookingResponse(
+	                b.getBookingID(),
+	                b.getBookingDate(),
+	                b.getNumAdults(),
+	                b.getNumChildren(),
+	                b.getTotalPrice(),
+	                b.getPaymentStatus(),
+	                b.getBookingStatus(),
+	                b.getContactName(),
+	                b.getContactEmail(),
+	                b.getContactPhone(),
+	                b.getContactAddress(),
+	                b.getCheckout() != null ? b.getCheckout().getPaymentMethod() : null
+	        );
+	    }
+	
 }

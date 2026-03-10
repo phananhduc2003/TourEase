@@ -19,4 +19,11 @@ public class AdminBookingController {
     public ResponseEntity<List<ManageBookingDTO.BookingResponse>> getAllBookings() {
         return ResponseEntity.ok(bookingService.getAllBooking());
     }
+    
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ManageBookingDTO.BookingResponse> updateBookingStatus(
+            @PathVariable Integer id,
+            @RequestBody ManageBookingDTO.UpdateStatusRequest request) {
+        return ResponseEntity.ok(bookingService.updateBookingStatus(id, request));
+    }
 }
